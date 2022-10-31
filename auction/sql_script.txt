@@ -1,0 +1,58 @@
+#DROP DATABASE auction;
+
+CREATE DATABASE auction
+  DEFAULT CHARACTER SET utf8
+  DEFAULT COLLATE utf8_general_ci;
+  
+#DROP USER 'auctadmin'@'localhost';
+#FLUSH PRIVILEGES;
+  
+CREATE USER 'auctadmin'@'localhost'
+	IDENTIFIED BY 'adminpassword';
+
+GRANT SELECT, UPDATE, INSERT, DELETE
+    ON auction.*
+    TO 'auctadmin'@'localhost';
+
+USE auction;
+
+CREATE TABLE User
+(
+  userID INTEGER AUTO_INCREMENT PRIMARY KEY,
+  displayName VARCHAR(50) NOT NULL,
+  email VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE SellerAccount
+(
+  sellerID INTEGER AUTO_INCREMENT PRIMARY KEY,
+  displayName VARCHAR(50) NOT NULL,
+  email VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE BuyerAccount
+(
+  buyerID INTEGER AUTO_INCREMENT PRIMARY KEY,
+  displayName VARCHAR(50) NOT NULL,
+  email VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE Category
+(
+  cateID INTEGER AUTO_INCREMENT PRIMARY KEY,
+  cateName VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE Item
+(
+  itemID INTEGER AUTO_INCREMENT PRIMARY KEY,
+  description TEXT NOT NULL,
+  category VARCHAR(50) NOT NULL,
+  startingPrice INTEGER NOT NULL,
+  reservePrice INTEGER NOT NULL,
+  endDate DATETIME NOT NULL,
+  highestPrice INTEGER NOT NULL,
+  buyerID INTEGER NOT NULL,
+  sellerID INTEGER NOT NULL
+);
+
