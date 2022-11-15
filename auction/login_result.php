@@ -23,7 +23,7 @@
                 $type = urrent($connection -> query("SELECT userType FROM User WHERE email = '$email'") -> fetch_assoc());
                 $_SESSION['account_type'] = $type;
                 
-                echo('<div class="text-center">You are now logged in! You will be redirected shortly.</div>');
+                echo '<div class="text-center">You are now logged in! You will be redirected shortly.</div>';
 
                 // Redirect to index after 5 seconds
                 header("refresh:5;url=index.php");
@@ -34,7 +34,7 @@
                 header("refresh:5;url=index.php");
             }
         } else {
-            echo('<div class="text-center">User not found. Please register a new account. You will be redirected shortly.</div>');
+            echo '<div class="text-center">User not found. Please register a new account. You will be redirected shortly.</div>';
             $_SESSION['logged_in'] = false;
             // Redirect to index after 5 seconds
             header("refresh:5;url=index.php");
