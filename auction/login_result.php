@@ -28,13 +28,13 @@
 				// Redirect to index after 5 seconds
 				header("refresh:5;url=index.php");
 			} else {
-				echo '<div class="text-center">You have entered a wrong username/password. Please try again.</div>';
+				echo '<div class="text-center">You have entered a wrong username/password. Please try again. You will be redirected shortly.</div>';
 				$_SESSION['logged_in'] = false;
 				// Redirect to index after 5 seconds
 				header("refresh:5;url=index.php");
 			}
 		} else {
-			echo('<div class="text-center">User not found. Please register a new account.</div>');
+			echo('<div class="text-center">User not found. Please register a new account. You will be redirected shortly.</div>');
 			$_SESSION['logged_in'] = false;
 			// Redirect to index after 5 seconds
 			header("refresh:5;url=index.php");
