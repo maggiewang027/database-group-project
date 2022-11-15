@@ -8,7 +8,7 @@
         // Query 1: check if the user has an account
         $query1 = "SELECT userID FROM User WHERE email = '$email'";
         $check1 = mysqli_query($connection, $query1);
-        if (mysqli_num_rows($check1) > 1) {
+        if (mysqli_num_rows($check1) >= 1) {
             // Hash the password
             $hash_pass = md5($password);
             // Query 2: check if the password match the email
