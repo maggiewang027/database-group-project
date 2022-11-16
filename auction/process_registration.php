@@ -16,7 +16,7 @@
             // Check if the password confirmation is same as the original one
             if ($password == $pass_confirm) {
             	// Query 1: check if the user already has an account
-                $query = "SELECT email FROM User WHERE email = '$email'";
+                $query = "SELECT * FROM User WHERE email = '$email'";
                 $check = mysqli_query($connection, $query);
 
                 if (mysqli_num_rows($check) == 0) {
@@ -25,7 +25,7 @@
                     $hash_pass = md5($password);
                     // Query 2: insert the registration information to the database
                     $register = "INSERT INTO User (userID, displayName, email, password, userType) VALUES ('$id', '$name', '$email', '$hash_pass', '$type')";
-                    $result = mysqli_query($connection, $register) or die(mysqli_error($connection));
+                    $result = mysqli_query($connection, $register);
                     // Set session variables
                     session_start();
                     $_SESSION['logged_in'] = true;
@@ -47,7 +47,7 @@
             }
 
         } else {
-            echo '<div class="text-center">Please enterer all the required information. You will be redirected shortly.</div>';
+            echo '<div class="text-center">Please enter all the required information. You will be redirected shortly.</div>';
             // Redirect to index after 5 seconds
             header("refresh:5;url=index.php");
         }
