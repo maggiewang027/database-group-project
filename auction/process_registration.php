@@ -24,7 +24,7 @@
                 	$id = uniqid();
                     $hash_pass = md5($password);
                     // Query 2: insert the registration information to the database
-                    $register = 'INSERT INTO `User` (`userID`, `displayName`, `email`, `password`, `userType`) VALUES ('$id', '$name', '$email', '$hash_pass', '$type');';
+                    $register = "INSERT INTO User (userID, displayName, email, password, userType) VALUES ('$id', '$name', '$email', '$hash_pass', '$type')";
                     $result = mysqli_query($connection, $register) or die(mysqli_error($connection));
                     // Set session variables
                     session_start();
@@ -45,12 +45,13 @@
                 // Redirect to index after 5 seconds
                 header("refresh:5;url=index.php");
             }
-            
+
         } else {
             echo '<div class="text-center">Please enterer all the required information. You will be redirected shortly.</div>';
             // Redirect to index after 5 seconds
             header("refresh:5;url=index.php");
         }
+        $connection -> close();
     }
 
 
