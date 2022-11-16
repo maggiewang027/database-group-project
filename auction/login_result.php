@@ -23,7 +23,7 @@
                     $type = $row['userType'];
                 }
                 // Set session variables
-				session_start();
+                session_start();
                 $_SESSION['logged_in'] = true;
                 $_SESSION['user_id'] = $user_id;
                 $_SESSION['account_type'] = $type;
