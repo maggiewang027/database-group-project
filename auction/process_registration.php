@@ -1,6 +1,7 @@
 <?php
     // Connect to the database
     include_once('database.php');
+    session_start();
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -27,9 +28,8 @@
                     $register = "INSERT INTO User (userID, displayName, email, password, userType) VALUES ('$id', '$name', '$email', '$hash_pass', '$type')";
                     $result = mysqli_query($connection, $register);
                     // Set session variables
-                    session_start();
                     $_SESSION['logged_in'] = true;
-                    $_SESSION['user_id'] = $id;
+                    $_SESSION['username'] = $name;
                     $_SESSION['account_type'] = $type;
                     echo '<div class="text-center">You are now registered and logged in! You will be redirected shortly.</div>';
                     // Redirect to index after 5 seconds
@@ -51,7 +51,7 @@
             // Redirect to index after 5 seconds
             header("refresh:5;url=index.php");
         }
-        $connection -> close();
+        mysqli_close($connection);
     }
 
 
