@@ -1,6 +1,7 @@
 <?php
     // Connect to the database
     include_once('database.php');
+    session_start();
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Obtain the login information
@@ -9,23 +10,21 @@
         // Query 1: check if the user has an account
         $query1 = "SELECT * FROM User WHERE email = '$email'";
         $check1 = mysqli_query($connection, $query1);
-
+        
         if (mysqli_num_rows($check1) >= 1) {
             // Hash the password
             $hash_pass = md5($password);
             // Query 2: check if the password match the email
             $query2 = "SELECT * FROM User WHERE email = '$email' AND password = '$hash_pass'";
-            $check2 = mysqli_query($connection, $query2);
 
             if (mysqli_num_rows($check2) == 1) {
                 while ($row = mysqli_fetch_assoc($check2)) {
-                    $user_id = $row['userID'];
+                    $name = $row['displayName'];
                     $type = $row['userType'];
                 }
                 // Set session variables
-                session_start();
                 $_SESSION['logged_in'] = true;
-                $_SESSION['user_id'] = $user_id;
+                $_SESSION['username'] = $name;
                 $_SESSION['account_type'] = $type;
                 echo '<div class="text-center">You are now logged in! You will be redirected shortly.</div>';
                 // Redirect to index after 5 seconds
@@ -43,7 +42,7 @@
             // Redirect to index after 5 seconds
             header("refresh:5;url=index.php");
         }
-        $connection -> close();
+        mysqli_close($connection);
     }
 
 
