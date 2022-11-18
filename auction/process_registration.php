@@ -23,7 +23,7 @@
                 if ($password == $pass_confirm) {
                 	// Generate the user id and hash the password
                 	$id = uniqid();
-                    $hash_pass = md5($password);
+                    $hash_pass = sha1($password);
                     // Query 2: insert the registration information to the database
                     $register = "INSERT INTO User (userID, displayName, email, password, userType) VALUES ('$id', '$name', '$email', '$hash_pass', '$type')";
                     $result = mysqli_query($connection, $register);
