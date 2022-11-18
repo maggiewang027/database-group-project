@@ -13,14 +13,14 @@
             $email = mysqli_real_escape_string($connection, $_POST['email']);
             $password = mysqli_real_escape_string($connection, $_POST['password']);
             $pass_confirm = mysqli_real_escape_string($connection, $_POST["passwordConfirmation"]);
+            // Query 1: check if the user already has an account
+            $query = "SELECT * FROM User WHERE email = '$email'";
+            $check = mysqli_query($connection, $query);
 
             // Check if the password confirmation is same as the original one
-            if ($password == $pass_confirm) {
-            	// Query 1: check if the user already has an account
-                $query = "SELECT * FROM User WHERE email = '$email'";
-                $check = mysqli_query($connection, $query);
-
-                if (mysqli_num_rows($check) == 0) {
+            if (mysqli_num_rows($check) == 0) {
+            	
+                if ($password == $pass_confirm) {
                 	// Generate the user id and hash the password
                 	$id = uniqid();
                     $hash_pass = md5($password);
@@ -35,21 +35,21 @@
                     // Redirect to index after 5 seconds
                     header("refresh:5;url=index.php");
                 } else {
-                    echo '<div class="text-center">The user already existed with the email. Please log in or check your details entered. You will be redirected shortly.</div>';
+                    echo '<div class="text-center">The two passwords do not match. Please try again. You will be redirected shortly.</div>';
                     // Redirect to index after 5 seconds
                     header("refresh:5;url=index.php");
                 }
 
             } else {
-                echo '<div class="text-center">The two passwords do not match. Please try again. You will be redirected shortly.</div>';
+                echo '<div class="text-center">The user already existed with the email. Please log in or check your details entered. You will be redirected shortly.</div>';
                 // Redirect to index after 5 seconds
-                header("refresh:5;url=index.php");
+                header("refresh:5;url=register.php");
             }
 
         } else {
             echo '<div class="text-center">Please enter all the required information. You will be redirected shortly.</div>';
             // Redirect to index after 5 seconds
-            header("refresh:5;url=index.php");
+            header("refresh:5;url=register.php");
         }
         mysqli_close($connection);
     }
