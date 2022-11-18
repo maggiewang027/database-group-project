@@ -13,7 +13,7 @@
         
         if (mysqli_num_rows($check1) >= 1) {
             // Hash the password
-            $hash_pass = md5($password);
+            $hash_pass = sha1($password);
             // Query 2: check if the password match the email
             $query2 = "SELECT * FROM User WHERE email = '$email' AND password = '$hash_pass'";
 
