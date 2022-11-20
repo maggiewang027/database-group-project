@@ -1,3 +1,5 @@
+#1120 Add: Insert data into Category Table
+
 #DROP DATABASE auction;
 
 CREATE DATABASE auction
@@ -30,6 +32,20 @@ CREATE TABLE Category
   cateID CHAR(34) PRIMARY KEY,
   cateName VARCHAR(50) NOT NULL
 );
+
+INSERT INTO Category 
+VALUES
+('1', 'Collectables'),
+('2', 'Fashion'),
+('3', 'Beauty'),
+('4', 'Baby'),
+('5', 'Home'),
+('6', 'Leisure'),
+('7', 'Sport'),
+('8', 'Media'),
+('9', 'Office'),
+('10', 'Electronics'),
+('11', 'Others');
 
 CREATE TABLE Item
 (
