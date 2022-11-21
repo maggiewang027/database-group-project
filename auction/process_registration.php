@@ -19,10 +19,9 @@
 
             // Check if the password confirmation is same as the original one
             if (mysqli_num_rows($check) == 0) {
-            	
+                
                 if ($password == $pass_confirm) {
-                	// Generate the user id and hash the password
-                	//$id = uniqid();
+                    // Hash the password
                     $hash_pass = sha1($password);
                     // Query 2: insert the registration information to the database
                     $register = "INSERT INTO User (userID, displayName, email, password, userType) VALUES (NULL, '$name', '$email', '$hash_pass', '$type')";
