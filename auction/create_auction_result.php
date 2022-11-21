@@ -3,6 +3,38 @@
 <div class="container my-5">
 
 <?php
+    // Connect to the database
+    include_once('database.php');
+    //session_start();
+
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if (!empty($_POST['auctionTitle']) && !empty($_POST['auctionCategory']) && !empty($_POST['auctionStartPrice']) && !empty($_POST['auctionEndDate'])) {
+            // Set the variables
+            //$item_id = uniqid();
+            $title = mysqli_real_escape_string($connection, $_POST['auctionTitle']);
+            $details = mysqli_real_escape_string($connection, $_POST['auctionDetails']);
+            $category = mysqli_real_escape_string($connection, $_POST['auctionCategory']);
+            $start_price = $_POST['auctionStartPrice'];
+            if (!empty($_POST["auctionReservePrice"])) {
+                $reserve_price = $_POST["auctionReservePrice"];
+            } else {
+                $reserve_price = $start_price;
+            }
+            $end_date = $_POST["auctionEndDate"];
+            $status = 'in progress';
+            $seller_id = $_SESSION['userid'];
+            // Query: insert the auction item to the database
+            $create_auction = "INSERT INTO Item (itemID, itemName, description, category, startingPrice, reservePrice, endDate, status, sellerID) VALUES (NULL, '$title', '$details', '$category', '$start_price', '$reserve_price', '$end_date', '$status', '$seller_id')";
+            $result = mysqli_query($connection, $create_auction);
+            // If all is successful, let user know.
+            echo('<div class="text-center">Auction successfully created! <a href="mylistings.php">View your new listing.</a></div>');
+        } else {
+            echo '<div class="text-center">Please enter all the required information. You will be redirected shortly.</div>';
+            // Redirect to index after 5 seconds
+            header("refresh:3;url=create_auction.php");
+        }
+        mysqli_close($connection);
+    }
 
 // This function takes the form data and adds the new auction to the database.
 
@@ -22,7 +54,7 @@
             
 
 // If all is successful, let user know.
-echo('<div class="text-center">Auction successfully created! <a href="FIXME">View your new listing.</a></div>');
+//echo('<div class="text-center">Auction successfully created! <a href="FIXME">View your new listing.</a></div>');
 
 
 ?>
