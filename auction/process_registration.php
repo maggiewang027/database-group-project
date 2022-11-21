@@ -37,19 +37,19 @@
                     header("refresh:3;url=index.php");
                 } else {
                     echo '<div class="text-center">The two passwords do not match. Please try again. You will be redirected shortly.</div>';
-                    // Redirect to index after 5 seconds
+                    // Redirect to index after 3 seconds
                     header("refresh:3;url=index.php");
                 }
 
             } else {
                 echo '<div class="text-center">The user already existed with the email. Please log in or check your details entered. You will be redirected shortly.</div>';
-                // Redirect to index after 5 seconds
+                // Redirect to index after 3 seconds
                 header("refresh:3;url=register.php");
             }
 
         } else {
             echo '<div class="text-center">Please enter all the required information. You will be redirected shortly.</div>';
-            // Redirect to index after 5 seconds
+            // Redirect to index after 3 seconds
             header("refresh:3;url=register.php");
         }
         mysqli_close($connection);
