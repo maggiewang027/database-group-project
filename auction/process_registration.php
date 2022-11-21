@@ -33,7 +33,7 @@
                     $_SESSION['username'] = $name;
                     $_SESSION['account_type'] = $type;
                     echo '<div class="text-center">You are now registered and logged in! You will be redirected shortly.</div>';
-                    // Redirect to index after 5 seconds
+                    // Redirect to index after 3 seconds
                     header("refresh:3;url=index.php");
                 } else {
                     echo '<div class="text-center">The two passwords do not match. Please try again. You will be redirected shortly.</div>';
