@@ -28,7 +28,11 @@
                     $result = mysqli_query($connection, $register);
                     // Set session variables
                     $_SESSION['logged_in'] = true;
-                    $_SESSION['userid'] = $id;
+                    $query2 = "SELECT * FROM User WHERE email = '$email'";
+                    $check2 = mysqli_query($connection, $query2);
+                    while ($row = mysqli_fetch_assoc($check2)) {
+                        $_SESSION['userid'] = $row['userID'];
+                    }
                     $_SESSION['username'] = $name;
                     $_SESSION['account_type'] = $type;
                     echo '<div class="text-center">You are now registered and logged in! You will be redirected shortly.</div>';
