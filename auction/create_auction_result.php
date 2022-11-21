@@ -5,12 +5,11 @@
 <?php
     // Connect to the database
     include_once('database.php');
-    //session_start();
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        
         if (!empty($_POST['auctionTitle']) && !empty($_POST['auctionCategory']) && !empty($_POST['auctionStartPrice']) && !empty($_POST['auctionEndDate'])) {
             // Set the variables
-            //$item_id = uniqid();
             $title = mysqli_real_escape_string($connection, $_POST['auctionTitle']);
             $details = mysqli_real_escape_string($connection, $_POST['auctionDetails']);
             $category = mysqli_real_escape_string($connection, $_POST['auctionCategory']);
@@ -30,7 +29,7 @@
             echo('<div class="text-center">Auction successfully created! <a href="mylistings.php">View your new listing.</a></div>');
         } else {
             echo '<div class="text-center">Please enter all the required information. You will be redirected shortly.</div>';
-            // Redirect to index after 5 seconds
+            // Redirect to index after 3 seconds
             header("refresh:3;url=create_auction.php");
         }
         mysqli_close($connection);
