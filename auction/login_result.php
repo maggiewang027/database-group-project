@@ -2,6 +2,7 @@
     // Connect to the database
     include_once("header.php");
     include_once('database.php');
+    //session_start();
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Obtain the login information
@@ -10,7 +11,7 @@
         // Query 1: check if the user has an account
         $query1 = "SELECT * FROM User WHERE email = '$email'";
         $check1 = mysqli_query($connection, $query1);
-        
+
         if (mysqli_num_rows($check1) >= 1) {
             // Hash the password
             $hash_pass = sha1($password);
@@ -20,28 +21,30 @@
 
             if (mysqli_num_rows($check2) == 1) {
                 while ($row = mysqli_fetch_assoc($check2)) {
+                    $id = $row['userID'];
                     $name = $row['displayName'];
                     $type = $row['userType'];
                 }
                 // Set session variables
                 $_SESSION['logged_in'] = true;
+                $_SESSION['userid'] = $id;
                 $_SESSION['username'] = $name;
                 $_SESSION['account_type'] = $type;
                 echo '<div class="text-center">You are now logged in! You will be redirected shortly.</div>';
-                // Redirect to index after 5 seconds
-                header("refresh:5;url=index.php");
+                // Redirect to index after 3 seconds
+                header("refresh:3;url=index.php");
             } else {
                 echo '<div class="text-center">You have entered a wrong password. Please try again. You will be redirected shortly.</div>';
                 $_SESSION['logged_in'] = false;
-                // Redirect to index after 5 seconds
-                header("refresh:5;url=index.php");
+                // Redirect to index after 3 seconds
+                header("refresh:3;url=index.php");
             }
 
         } else {
             echo '<div class="text-center">User not found. Please register a new account. You will be redirected shortly.</div>';
             $_SESSION['logged_in'] = false;
-            // Redirect to index after 5 seconds
-            header("refresh:5;url=index.php");
+            // Redirect to index after 3 seconds
+            header("refresh:3;url=index.php");
         }
         mysqli_close($connection);
     }
