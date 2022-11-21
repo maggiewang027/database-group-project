@@ -1,4 +1,5 @@
 #1120 Add: Insert data into Category Table
+#1121 Update: Adjust the id type to integer (applied to process_registration.php, etc.)
 
 #DROP DATABASE auction;
 
@@ -9,8 +10,8 @@ CREATE DATABASE auction
 #DROP USER 'auctadmin'@'localhost';
 #FLUSH PRIVILEGES;
   
-CREATE USER 'auctadmin'@'localhost'
-	IDENTIFIED BY 'adminpassword';
+#CREATE USER 'auctadmin'@'localhost'
+#	IDENTIFIED BY 'adminpassword';
 
 GRANT SELECT, UPDATE, INSERT, DELETE
     ON auction.*
@@ -20,7 +21,7 @@ USE auction;
 
 CREATE TABLE User
 (
-  userID CHAR(34) PRIMARY KEY,
+  userID INTEGER AUTO_INCREMENT PRIMARY KEY,
   displayName VARCHAR(50) NOT NULL,
   email VARCHAR(50) NOT NULL,
   password VARCHAR(50) NOT NULL,
@@ -29,27 +30,27 @@ CREATE TABLE User
 
 CREATE TABLE Category
 (
-  cateID CHAR(34) PRIMARY KEY,
+  cateID INTEGER AUTO_INCREMENT PRIMARY KEY,
   cateName VARCHAR(50) NOT NULL
 );
 
 INSERT INTO Category 
 VALUES
-('1', 'Collectables'),
-('2', 'Fashion'),
-('3', 'Beauty'),
-('4', 'Baby'),
-('5', 'Home'),
-('6', 'Leisure'),
-('7', 'Sport'),
-('8', 'Media'),
-('9', 'Office'),
-('10', 'Electronics'),
-('11', 'Others');
+(NULL, 'Collectables'),
+(NULL, 'Fashion'),
+(NULL, 'Beauty'),
+(NULL, 'Baby'),
+(NULL, 'Home'),
+(NULL, 'Leisure'),
+(NULL, 'Sport'),
+(NULL, 'Media'),
+(NULL, 'Office'),
+(NULL, 'Electronics'),
+(NULL, 'Others');
 
 CREATE TABLE Item
 (
-  itemID CHAR(34) PRIMARY KEY,
+  itemID INTEGER AUTO_INCREMENT PRIMARY KEY,
   itemName VARCHAR(50) NOT NULL,
   description TEXT NOT NULL,
   category VARCHAR(50) NOT NULL,
@@ -62,10 +63,9 @@ CREATE TABLE Item
 
 CREATE TABLE BidItem
 (
-  itemID CHAR(34) PRIMARY KEY,
+  itemID INTEGER PRIMARY KEY,
   bidTime DATETIME NOT NULL,
   bidPrice INTEGER NOT NULL,
   buyerID CHAR(34) NOT NULL,
   status VARCHAR(50) NOT NULL
 );
-
