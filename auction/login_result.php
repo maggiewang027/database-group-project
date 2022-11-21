@@ -2,7 +2,6 @@
     // Connect to the database
     include_once("header.php");
     include_once('database.php');
-    //session_start();
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Obtain the login information
