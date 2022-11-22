@@ -1,5 +1,6 @@
 <?php include_once("header.php")?>
 <?php require("utilities.php")?>
+<?php include_once('database.php')?>
 
 <div class="container">
 
@@ -20,18 +21,33 @@
               <i class="fa fa-search"></i>
             </span>
           </div>
-          <input type="text" class="form-control border-left-0" id="keyword" placeholder="Search for anything">
+          <input type="text" class="form-control border-left-0" id="keyword" name="keyword" placeholder="Search for anything">
         </div>
       </div>
     </div>
     <div class="col-md-3 pr-0">
       <div class="form-group">
         <label for="cat" class="sr-only">Search within:</label>
-        <select class="form-control" id="cat">
+        <select class="form-control" id="cat" name='cat'>
           <option selected value="all">All categories</option>
+          <!--delete all then -->
+          <!--
           <option value="fill">Fill me in</option>
           <option value="with">with options</option>
           <option value="populated">populated from a database?</option>
+        -->
+        
+          <!--Show drop down list box----------------------------------------------------------------------------------->
+          <?php
+          $query = "select cateName from Category";
+          $result = mysqli_query($connection, $query);
+          while($row = mysqli_fetch_assoc($result))
+          {
+            echo "<option value='$row[cateName]'>$row[cateName]</option>";
+          }
+          ?>
+          <!------------------------------------------------------------------------------------------------------------>
+
         </select>
       </div>
     </div>
@@ -88,7 +104,17 @@
   /* TODO: Use above values to construct a query. Use this query to 
      retrieve data from the database. (If there is no form data entered,
      decide on appropriate default value/default query to make. */
-  
+    
+    //-------------------------------------------------------------------------------------------------------- 
+     //obtain search result
+     if($category=='all'){
+     $query = "SELECT * FROM Item where concat(itemName,description) like '%$keyword%'";
+     }
+     else {$query = "SELECT * FROM Item where category = '$category' and concat(itemName,description) like '%$keyword%'";
+     }
+
+     $result = mysqli_query($connection, $query);
+
   /* For the purposes of pagination, it would also be helpful to know the
      total number of results that satisfy the above query */
   $num_results = 96; // TODO: Calculate me for real
@@ -105,10 +131,23 @@
 <!-- TODO: Use a while loop to print a list item for each auction listing
      retrieved from the query -->
 
+<?php    
+    while ($row = mysqli_fetch_assoc($result)) {
+      $item_id = $row['itemID'];
+      $title = $row['itemName'];
+      $description = $row['description'];
+      $current_price = 2;
+      $num_bids=1 ;
+      $end_date=$row['endDate'];
+      print_listing_li($item_id, $title, $description, $current_price, $num_bids, $end_date);
+    }
+?>
+
 <?php
+/*
   // Demonstration of what listings will look like using dummy data.
   $item_id = "87021";
-  $title = "Dummy title";
+  $title =  "xxx";
   $description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum eget rutrum ipsum. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Phasellus feugiat, ipsum vel egestas elementum, sem mi vestibulum eros, et facilisis dui nisi eget metus. In non elit felis. Ut lacus sem, pulvinar ultricies pretium sed, viverra ac sapien. Vivamus condimentum aliquam rutrum. Phasellus iaculis faucibus pellentesque. Sed sem urna, maximus vitae cursus id, malesuada nec lectus. Vestibulum scelerisque vulputate elit ut laoreet. Praesent vitae orci sed metus varius posuere sagittis non mi.";
   $current_price = 30;
   $num_bids = 1;
@@ -125,7 +164,9 @@
   $end_date = new DateTime('2020-11-02T00:00:00');
   
   print_listing_li($item_id, $title, $description, $current_price, $num_bids, $end_date);
+*/
 ?>
+
 
 </ul>
 
@@ -185,6 +226,8 @@
       </a>
     </li>');
   }
+
+mysqli_close($connection);
 ?>
 
   </ul>
