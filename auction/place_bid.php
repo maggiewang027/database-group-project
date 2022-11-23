@@ -31,19 +31,19 @@ if ($bid > $latest_bid_price)
     if($list_biditem)
     {
     echo '<div class="text-center">Bid successful</div>';
-    header("refresh:2;url=listing.php");
+    header("refresh:2;url=browse.php");
     }
     else
     {
     printf("wrong masseage: %s\n", mysqli_error($connection));
-    header("refresh:2;url=listing.php");
+    header("refresh:2;url=browse.php");
     }
 
 }
 else
 {
     echo '<div class="text-center">You can not enter a value lower than Current bid</div>';
-    header("refresh:2;url=listing.php");
+    header("refresh:2;url=browse.php");
 }
 
 
