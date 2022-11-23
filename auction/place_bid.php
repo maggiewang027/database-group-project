@@ -4,31 +4,43 @@
 
 
 <?php
-$item_id = $_GET['item_id'];
+$item_id = 13;//TODO
+
 // TODO: Extract $_POST variables, check they're OK, and attempt to make a bid.
 // Notify user of success/failure and redirect/give navigation options.
 
+//
 $bid = $_POST['bid'];
-$pre_bid="SELECT bidPrice FROM Item WHERE itemID =1";
-$latest_bid=mysqli_query($connection, $pre_bid);
-while($price=mysqli_fetch_array($latest_bid))
+$query="SELECT latestPrice
+  FROM Item i
+  JOIN
+    (SELECT itemID,
+             MAX(price) AS latestPrice
+     FROM
+       (SELECT itemID,
+               bidPrice AS price
+        FROM BidItem
+        where itemID='$item_id'
+        UNION ALL SELECT itemID,
+                         startingPrice AS price
+        FROM Item
+        where itemID='$item_id') AS prices
+     GROUP BY itemID ) bi
+  WHERE i.itemID = bi.itemID ";
+  
+$result=mysqli_query($connection, $query);
+while($row=mysqli_fetch_array($result))
 {
-    $latest_bid_price=$price['bidPrice'];
+    $latest_price=$price['latest_price'];
 }
 
-if ($bid > $latest_bid_price)
+if ($bid > $latest_price)
 {
-    $query = "INSERT INTO BidItem (itemID, bidTime, bidPrice, buyerID, status) 
-    VALUES (1, now(), '$bid', 1, 'auction')";          
+    $query = "INSERT INTO BidItem (bidID, itemID, bidTime, bidPrice, buyerID, status) 
+    VALUES (NULL, '$item_id', now(), '$bid', 1, 'InAuction')";          
     $result = mysqli_query($connection, $query);
 
-    $sql_biditem="UPDATE BidItem set bidPrice='$bid' where itemID =1";
-    $list_biditem=mysqli_query($connection, $sql_biditem);
-
-    $sql="UPDATE Item set bidPrice='$bid' where itemID =1";
-    $list=mysqli_query($connection, $sql);
-
-    if($list_biditem)
+    if($result)
     {
     echo '<div class="text-center">Bid successful</div>';
     header("refresh:2;url=browse.php");
@@ -43,7 +55,7 @@ if ($bid > $latest_bid_price)
 else
 {
     echo '<div class="text-center">You can not enter a value lower than Current bid</div>';
-    header("refresh:2;url=browse.php");
+    header("refresh:5;url=browse.php");
 }
 
 
