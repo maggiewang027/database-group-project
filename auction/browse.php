@@ -106,11 +106,46 @@
      decide on appropriate default value/default query to make. */
     
     //-------------------------------------------------------------------------------------------------------- 
-     //obtain search result
+     //obtain search result   
      if($category=='all'){
-     $query = "SELECT * FROM Item where concat(itemName,description) like '%$keyword%'";
+     $query = "SELECT *
+     FROM Item i
+     JOIN (
+     SELECT itemID,
+            MAX(price) AS latestPrice
+     FROM
+       (SELECT itemID,
+               bidPrice AS price
+        FROM BidItem
+        UNION ALL SELECT itemID,
+                         startingPrice AS price
+        FROM Item) AS prices
+     GROUP BY itemID
+     
+      ) bi
+     WHERE i.itemID = bi.itemID
+       AND concat(itemName,description) LIKE '%$keyword%'
+     ";
      }
-     else {$query = "SELECT * FROM Item where category = '$category' and concat(itemName,description) like '%$keyword%'";
+     else {$query = "SELECT *
+      FROM Item i
+      JOIN (
+      SELECT itemID,
+             MAX(price) AS latestPrice
+      FROM
+        (SELECT itemID,
+                bidPrice AS price
+         FROM BidItem
+         UNION ALL SELECT itemID,
+                          startingPrice AS price
+         FROM Item) AS prices
+      GROUP BY itemID
+      
+       ) bi
+      WHERE i.itemID = bi.itemID
+        AND concat(itemName,description) LIKE '%$keyword%'
+        AND category = '$category'        
+     ";
      }
 
      $result = mysqli_query($connection, $query);
@@ -136,7 +171,7 @@
       $item_id = $row['itemID'];
       $title = $row['itemName'];
       $description = $row['description'];
-      $current_price = 2;
+      $current_price = $row['latestPrice'];
       $num_bids=1 ;
       $end_date=$row['endDate'];
       print_listing_li($item_id, $title, $description, $current_price, $num_bids, $end_date);
