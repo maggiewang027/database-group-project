@@ -1,6 +1,7 @@
 #1120 Add: Insert data into Category Table
 #1121 Update: Adjust the id type to integer (applied to process_registration.php, etc.)
-#1122 Update: Adjust BidItem id type from integer to integer auto_increment
+#1122 Update: Adjust BidItem id type from integer to integer auto_increment (ps. 1123 recovered to interger)
+#1123 Update: Add bidID as primary key in BidItem Table (to display and count all records) and set itemID as a foreign key
 
 #DROP DATABASE auction;
 
@@ -60,14 +61,14 @@ CREATE TABLE Item
   endDate DATETIME NOT NULL,
   status VARCHAR(50) NOT NULL,
   sellerID CHAR(34) NOT NULL,
-  bidPrice INTEGER NOT NULL
 );
 
 CREATE TABLE BidItem
 (
-  itemID INTEGER AUTO_INCREMENT PRIMARY KEY,
-  bidTime DATETIME NOT NULL,
-  bidPrice INTEGER NOT NULL,
-  buyerID CHAR(34) NOT NULL,
-  status VARCHAR(50) NOT NULL
+    bidID INTEGER AUTO_INCREMENT PRIMARY KEY,
+    itemID INTEGER NOT NULL,
+    bidTime DATETIME NOT NULL,
+    bidPrice INTEGER NOT NULL,
+    buyerID CHAR(34) NOT NULL,
+    STATUS VARCHAR(50) NOT NULL
 );
