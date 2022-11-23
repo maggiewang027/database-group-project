@@ -5,29 +5,43 @@
 <?php
   // Get info from the URL:
   $item_id = $_GET['item_id'];
-  
+
   // TODO: Use item_id to make a query to the database.
-  $query="SELECT * FROM Item WHERE itemID='$item_id' ";
+  $query="SELECT *
+  FROM Item i
+  JOIN
+    (SELECT itemID,
+             MAX(price) AS latestPrice
+     FROM
+       (SELECT itemID,
+               bidPrice AS price
+        FROM BidItem
+        where itemID='$item_id'
+        UNION ALL SELECT itemID,
+                         startingPrice AS price
+        FROM Item
+        where itemID='$item_id') AS prices
+     GROUP BY itemID ) bi
+  WHERE i.itemID = bi.itemID ";
   $result=mysqli_query($connection, $query);
-  //$sql="SELECT bidPrice FROM BidItem WHERE itemID='$item_id' ";
-  //$value=mysqli_query($connection, $sql);
 
   // DELETEME: For now, using placeholder data.
-
+  //$title = "Placeholder title";
+  //$description = "Description blah blah blah";
+  //$current_price = 30.50;
+  //$num_bids = 1;
+  //$end_time = new DateTime('2020-11-02T00:00:00');
 
   while($row=mysqli_fetch_array($result))
   {
     $title=$row['itemName'];
     $description=$row['description'];
-    $current_price=$row['bidPrice'];
+    $current_price=$row['latestPrice'];
     $num_bids=2;
-    $end_time=new DateTime($row['endDate']);  
+    $end_time=new DateTime($row['endDate']);
+
   } 
 
-  //while($r=mysqli_fetch_array($value))
-  //{
-  //  $current_price=$r['bidPrice'];
-  //}
   // TODO: Note: Auctions that have ended may pull a different set of data,
   //       like whether the auction ended in a sale or was cancelled due
   //       to lack of high-enough bids. Or maybe not.
@@ -87,8 +101,8 @@
      This auction ended <?php echo(date_format($end_time, 'j M H:i')) ?>
      <!-- TODO: Print the result of the auction here? -->
 <?php else: ?>
-     Auction ends <?php echo(date_format($end_time, 'j M H:i') . $time_remaining) ?></p>  
-    <p class="lead">Current bid: £<?php echo(number_format($current_price, 2)) ?></p>
+     Auction ends <?php echo(date_format($end_time, 'j M H:i') . $time_remaining) ?></p >  
+    <p class="lead">Current bid: £<?php echo(number_format($current_price, 2)) ?></p >
 
     <!-- Bidding form -->
     <form method="POST" action="place_bid.php">
@@ -96,9 +110,9 @@
         <div class="input-group-prepend">
           <span class="input-group-text">£</span>
         </div>
-	    <input type="number" class="form-control" id="bid" name="bid">
+     <input type="number" class="form-control" id="bid" name="bid">
       </div>
-      <button type="submit" class="btn btn-primary form-control" >Place bid</button>
+      <button type="submit" class="btn btn-primary form-control">Place bid</button>
     </form>
 <?php endif ?>
 
