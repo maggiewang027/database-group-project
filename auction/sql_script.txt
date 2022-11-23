@@ -59,7 +59,8 @@ CREATE TABLE Item
   reservePrice INTEGER NOT NULL,
   endDate DATETIME NOT NULL,
   status VARCHAR(50) NOT NULL,
-  sellerID CHAR(34) NOT NULL
+  sellerID CHAR(34) NOT NULL,
+  bidPrice INTEGER NOT NULL
 );
 
 CREATE TABLE BidItem
