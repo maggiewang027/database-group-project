@@ -3,7 +3,7 @@
 #1122 Update: Adjust BidItem id type from integer to integer auto_increment (ps. 1123 recovered to interger)
 #1123 Update: Add bidID as primary key in BidItem Table (to display and count all records) and set itemID as a foreign key
 
-#DROP DATABASE auction;
+DROP DATABASE auction;
 
 CREATE DATABASE auction
   DEFAULT CHARACTER SET utf8
@@ -60,7 +60,7 @@ CREATE TABLE Item
   reservePrice INTEGER NOT NULL,
   endDate DATETIME NOT NULL,
   status VARCHAR(50) NOT NULL,
-  sellerID CHAR(34) NOT NULL,
+  sellerID CHAR(34) NOT NULL
 );
 
 CREATE TABLE BidItem
