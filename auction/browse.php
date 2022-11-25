@@ -82,6 +82,7 @@
 
   if (!isset($_GET['cat'])) {
     // TODO: Define behavior if a category has not been specified.
+    $category = 'all';
   }
   else {
     $category = $_GET['cat'];
