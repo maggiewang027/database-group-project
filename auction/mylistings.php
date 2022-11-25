@@ -18,7 +18,7 @@ if (!isset($_SESSION['account_type']) || $_SESSION['account_type'] != 'seller') 
 // TODO: Perform a query to pull up their auctions.
 $sellerID = $_SESSION['userid'];
   if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == true) {
-    $query = "SELECT i.itemID as itemID, itemName, description, latestPrice, endDate, bid_cnt
+    $query = "SELECT i.itemID as itemID, itemName, description, latestPrice, endDate, sellerID, bid_cnt
      FROM Item i
      JOIN (
      SELECT itemID,
@@ -33,14 +33,14 @@ $sellerID = $_SESSION['userid'];
         FROM Item) AS prices
      GROUP BY itemID   
       ) bi
-     WHERE i.itemID = bi.itemID";
+     ON i.itemID = bi.itemID
+     WHERE sellerID = '$sellerID'";
     $result = mysqli_query($connection, $query)or die('Error making select users query' . mysql_error());
     
 // TODO: Loop through results and print them out as list items.
     if (empty($result)) {
       echo 'You do not have any auctions.';
     } else {
-      echo 'yes';
       while ($row = mysqli_fetch_assoc($result)) {
         $item_id = $row['itemID'];
         $title = $row['itemName'];
