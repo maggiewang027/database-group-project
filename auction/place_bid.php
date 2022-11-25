@@ -57,7 +57,7 @@ if (isset($_SESSION['account_type']) && $_SESSION['account_type'] == 'buyer') {
     else
     {
         echo '<div class="text-center">You cannot enter a value lower than Current bid</div>';
-        header("refresh:3;url=browse.php");
+        header("refresh:3;url=listing.php?item_id=$item_id");
     }
 
     mysqli_close($link);
