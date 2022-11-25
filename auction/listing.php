@@ -105,6 +105,9 @@
      Auction ends <?php echo(date_format($end_time, 'j M H:i') . $time_remaining) ?></p >  
     <p class="lead">Current bid: £<?php echo(number_format($current_price, 2)) ?></p >
 
+<?php
+if (isset($_SESSION['account_type']) && $_SESSION['account_type'] == 'buyer') {
+  echo('
     <!-- Bidding form -->
     <form method="POST" action="place_bid.php">
       <div class="input-group">
@@ -114,7 +117,10 @@
      <input type="number" class="form-control" id="bid" name="bid">
       </div>
       <button type="submit" class="btn btn-primary form-control">Place bid</button>
-    </form>
+    </form>');
+  }
+?>
+    
 <?php endif ?>
 
   
