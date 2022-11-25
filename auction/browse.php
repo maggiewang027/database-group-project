@@ -54,7 +54,7 @@
     <div class="col-md-3 pr-0">
       <div class="form-inline">
         <label class="mx-2" for="order_by">Sort by:</label>
-        <select class="form-control" id="order_by">
+        <select class="form-control" id="order_by" name="order_by">
           <option selected value="pricelow">Price (low to high)</option>
           <option value="pricehigh">Price (high to low)</option>
           <option value="date">Soonest expiry</option>
@@ -82,7 +82,7 @@
 
   if (!isset($_GET['cat'])) {
     // TODO: Define behavior if a category has not been specified.
-    $category = 'all';
+    $category ='all';
   }
   else {
     $category = $_GET['cat'];
@@ -90,6 +90,7 @@
   
   if (!isset($_GET['order_by'])) {
     // TODO: Define behavior if an order_by value has not been specified.
+    $ordering = 'pricelow';
   }
   else {
     $ordering = $_GET['order_by'];
@@ -108,13 +109,34 @@
     
     //-------------------------------------------------------------------------------------------------------- 
      //obtain search result   
-     if($category=='all'){
-     $query = "SELECT i.itemID as itemID, itemName, description, latestPrice, endDate, bid_cnt
+if($ordering == 'pricelow'){
+  if($category=='all'){
+    $query = "SELECT i.itemID as itemID, itemName, description, latestPrice, endDate, bid_cnt
+    FROM Item i
+    JOIN (
+    SELECT itemID,
+           MAX(price) AS latestPrice,
+           COUNT(*)-1 AS bid_cnt
+    FROM
+      (SELECT itemID,
+              bidPrice AS price
+       FROM BidItem
+       UNION ALL SELECT itemID,
+                        startingPrice AS price
+       FROM Item) AS prices
+    GROUP BY itemID   
+     ) bi
+    WHERE i.itemID = bi.itemID
+      AND concat(itemName,description) LIKE '%$keyword%'
+      ORDER BY latestPrice
+    ";
+    }
+    else {$query = "SELECT i.itemID as itemID, itemName, description, latestPrice, endDate, bid_cnt
      FROM Item i
      JOIN (
      SELECT itemID,
             MAX(price) AS latestPrice,
-            COUNT(*)-1 AS bid_cnt
+            count(*)-1 AS bid_cnt
      FROM
        (SELECT itemID,
                bidPrice AS price
@@ -126,30 +148,99 @@
       ) bi
      WHERE i.itemID = bi.itemID
        AND concat(itemName,description) LIKE '%$keyword%'
-     ";
-     }
-     else {$query = "SELECT i.itemID as itemID, itemName, description, latestPrice, endDate, bid_cnt
-      FROM Item i
-      JOIN (
-      SELECT itemID,
-             MAX(price) AS latestPrice,
-             count(*)-1 AS bid_cnt
-      FROM
-        (SELECT itemID,
-                bidPrice AS price
-         FROM BidItem
-         UNION ALL SELECT itemID,
-                          startingPrice AS price
-         FROM Item) AS prices
-      GROUP BY itemID   
-       ) bi
-      WHERE i.itemID = bi.itemID
-        AND concat(itemName,description) LIKE '%$keyword%'
-        AND category = '$category'        
-     ";
-     }
+       AND category = '$category' 
+       ORDER BY latestPrice
+    ";
+    }
+} elseif($ordering == 'pricehigh'){
+  if($category=='all'){
+    $query = "SELECT i.itemID as itemID, itemName, description, latestPrice, endDate, bid_cnt
+    FROM Item i
+    JOIN (
+    SELECT itemID,
+           MAX(price) AS latestPrice,
+           COUNT(*)-1 AS bid_cnt
+    FROM
+      (SELECT itemID,
+              bidPrice AS price
+       FROM BidItem
+       UNION ALL SELECT itemID,
+                        startingPrice AS price
+       FROM Item) AS prices
+    GROUP BY itemID   
+     ) bi
+    WHERE i.itemID = bi.itemID
+      AND concat(itemName,description) LIKE '%$keyword%'
+      ORDER BY latestPrice DESC
+    ";
+    }
+    else {$query = "SELECT i.itemID as itemID, itemName, description, latestPrice, endDate, bid_cnt
+     FROM Item i
+     JOIN (
+     SELECT itemID,
+            MAX(price) AS latestPrice,
+            count(*)-1 AS bid_cnt
+     FROM
+       (SELECT itemID,
+               bidPrice AS price
+        FROM BidItem
+        UNION ALL SELECT itemID,
+                         startingPrice AS price
+        FROM Item) AS prices
+     GROUP BY itemID   
+      ) bi
+     WHERE i.itemID = bi.itemID
+       AND concat(itemName,description) LIKE '%$keyword%'
+       AND category = '$category' 
+       ORDER BY latestPrice DESC
+    ";
+    }
+} elseif($ordering == 'date'){
+  if($category=='all'){
+    $query = "SELECT i.itemID as itemID, itemName, description, latestPrice, endDate, bid_cnt
+    FROM Item i
+    JOIN (
+    SELECT itemID,
+           MAX(price) AS latestPrice,
+           COUNT(*)-1 AS bid_cnt
+    FROM
+      (SELECT itemID,
+              bidPrice AS price
+       FROM BidItem
+       UNION ALL SELECT itemID,
+                        startingPrice AS price
+       FROM Item) AS prices
+    GROUP BY itemID   
+     ) bi
+    WHERE i.itemID = bi.itemID
+      AND concat(itemName,description) LIKE '%$keyword%'
+      ORDER BY endDate DESC
+    ";
+    }
+    else {$query = "SELECT i.itemID as itemID, itemName, description, latestPrice, endDate, bid_cnt
+     FROM Item i
+     JOIN (
+     SELECT itemID,
+            MAX(price) AS latestPrice,
+            count(*)-1 AS bid_cnt
+     FROM
+       (SELECT itemID,
+               bidPrice AS price
+        FROM BidItem
+        UNION ALL SELECT itemID,
+                         startingPrice AS price
+        FROM Item) AS prices
+     GROUP BY itemID   
+      ) bi
+     WHERE i.itemID = bi.itemID
+       AND concat(itemName,description) LIKE '%$keyword%'
+       AND category = '$category' 
+       ORDER BY endDate DESC
+    ";
+    }
+}
 
-     $result = mysqli_query($connection, $query);
+$result = mysqli_query($connection, $query);
 
 
   /* For the purposes of pagination, it would also be helpful to know the
@@ -180,8 +271,8 @@ if($num_results == 0){
       $title = $row['itemName'];
       $description = $row['description'];
       $current_price = $row['latestPrice'];
-      $num_bids=$row['bid_cnt'];
-      $end_date=$row['endDate'];
+      $num_bids = $row['bid_cnt'];
+      $end_date = $row['endDate'];
       print_listing_li($item_id, $title, $description, $current_price, $num_bids, $end_date);
     }
 ?>
