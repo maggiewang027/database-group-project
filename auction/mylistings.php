@@ -18,8 +18,23 @@ if (!isset($_SESSION['account_type']) || $_SESSION['account_type'] != 'seller') 
 // TODO: Perform a query to pull up their auctions.
 $sellerID = $_SESSION['userid'];
   if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == true) {
-    $query1 = "SELECT itemID, itemName, description, startingPrice, endDate FROM Item";
-    $result = mysqli_query($connection, $query1)or die('Error making select users query' . mysql_error());
+    $query = "SELECT i.itemID as itemID, itemName, description, latestPrice, endDate, bid_cnt
+     FROM Item i
+     JOIN (
+     SELECT itemID,
+            MAX(price) AS latestPrice,
+            COUNT(*)-1 AS bid_cnt
+     FROM
+       (SELECT itemID,
+               bidPrice AS price
+        FROM BidItem
+        UNION ALL SELECT itemID,
+                         startingPrice AS price
+        FROM Item) AS prices
+     GROUP BY itemID   
+      ) bi
+     WHERE i.itemID = bi.itemID";
+    $result = mysqli_query($connection, $query)or die('Error making select users query' . mysql_error());
     
 // TODO: Loop through results and print them out as list items.
     if (empty($result)) {
@@ -30,8 +45,8 @@ $sellerID = $_SESSION['userid'];
         $item_id = $row['itemID'];
         $title = $row['itemName'];
         $desc = $row['description'];
-        $price = 2;
-        $num_bids = 1;
+        $price = $row['latestPrice'];
+        $num_bids = $row['bid_cnt'];
         $end_time = $row['endDate'];
         print_listing_li($item_id, $title, $desc, $price, $num_bids, $end_time);
       }
