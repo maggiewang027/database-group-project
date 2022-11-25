@@ -108,11 +108,12 @@
     //-------------------------------------------------------------------------------------------------------- 
      //obtain search result   
      if($category=='all'){
-     $query = "SELECT *
+     $query = "SELECT i.itemID as itemID, itemName, description, latestPrice, endDate, bid_cnt
      FROM Item i
      JOIN (
      SELECT itemID,
-            MAX(price) AS latestPrice
+            MAX(price) AS latestPrice,
+            COUNT(*)-1 AS bid_cnt
      FROM
        (SELECT itemID,
                bidPrice AS price
@@ -120,18 +121,18 @@
         UNION ALL SELECT itemID,
                          startingPrice AS price
         FROM Item) AS prices
-     GROUP BY itemID
-     
+     GROUP BY itemID   
       ) bi
      WHERE i.itemID = bi.itemID
        AND concat(itemName,description) LIKE '%$keyword%'
      ";
      }
-     else {$query = "SELECT *
+     else {$query = "SELECT i.itemID as itemID, itemName, description, latestPrice, endDate, bid_cnt
       FROM Item i
       JOIN (
       SELECT itemID,
-             MAX(price) AS latestPrice
+             MAX(price) AS latestPrice,
+             count(*)-1 AS bid_cnt
       FROM
         (SELECT itemID,
                 bidPrice AS price
@@ -139,8 +140,7 @@
          UNION ALL SELECT itemID,
                           startingPrice AS price
          FROM Item) AS prices
-      GROUP BY itemID
-      
+      GROUP BY itemID   
        ) bi
       WHERE i.itemID = bi.itemID
         AND concat(itemName,description) LIKE '%$keyword%'
@@ -150,16 +150,23 @@
 
      $result = mysqli_query($connection, $query);
 
+
   /* For the purposes of pagination, it would also be helpful to know the
      total number of results that satisfy the above query */
-  $num_results = 96; // TODO: Calculate me for real
-  $results_per_page = 10;
+  $num_results = mysqli_num_rows($result); // TODO: Calculate me for real
+  $results_per_page = 3;
   $max_page = ceil($num_results / $results_per_page);
 ?>
 
 <div class="container mt-5">
 
 <!-- TODO: If result set is empty, print an informative message. Otherwise... -->
+
+<?php
+if($num_results == 0){
+  //echo '<div class="text-center">Sorry, there is no matching result. </div>';
+}
+?>
 
 <ul class="list-group">
 
@@ -172,7 +179,7 @@
       $title = $row['itemName'];
       $description = $row['description'];
       $current_price = $row['latestPrice'];
-      $num_bids=1 ;
+      $num_bids=$row['bid_cnt'];
       $end_date=$row['endDate'];
       print_listing_li($item_id, $title, $description, $current_price, $num_bids, $end_date);
     }
