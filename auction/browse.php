@@ -55,9 +55,9 @@
       <div class="form-inline">
         <label class="mx-2" for="order_by">Sort by:</label>
         <select class="form-control" id="order_by" name="order_by">
-          <option selected value="pricelow">Price (low to high)</option>
+          <option selected value="date">Soonest expiry</option>
+          <option value="pricelow">Price (low to high)</option>
           <option value="pricehigh">Price (high to low)</option>
-          <option value="date">Soonest expiry</option>
         </select>
       </div>
     </div>
@@ -90,7 +90,7 @@
   
   if (!isset($_GET['order_by'])) {
     // TODO: Define behavior if an order_by value has not been specified.
-    $ordering = 'pricelow';
+    $ordering = 'date';
   }
   else {
     $ordering = $_GET['order_by'];
