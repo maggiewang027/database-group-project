@@ -11,7 +11,7 @@ $buyer_id = $_SESSION['userid'];
 // Notify user of success/failure and redirect/give navigation options.
 
 //
-if (!isset($_SESSION['account_type']) || $_SESSION['account_type'] != 'buyer') {
+if (!isset($_SESSION['account_type']) || $_SESSION['account_type'] = 'buyer') {
     $bid = $_POST['bid'];
     $query="SELECT latestPrice
       FROM Item i
