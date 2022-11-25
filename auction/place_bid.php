@@ -32,7 +32,7 @@ if (!isset($_SESSION['account_type']) || $_SESSION['account_type'] != 'buyer') {
     $result=mysqli_query($connection, $query);
     while($row=mysqli_fetch_array($result))
     {
-        $latest_price=$price['latest_price'];
+        $latest_price=$row['latestPrice'];
     }
 
     if ($bid > $latest_price)
