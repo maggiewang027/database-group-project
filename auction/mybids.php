@@ -39,7 +39,8 @@ $buyerID = $_SESSION['userid'];
         FROM Item) AS prices
      GROUP BY itemID
       ) bi
-     WHERE i.itemID = bi.itemID";
+     WHERE i.itemID IN (SELECT itemID FROM BidItem WHERE buyerID = '$buyerID') 
+        AND i.itemID = bi.itemID";
     $result = mysqli_query($connection, $query)or die('Error making select users query' . mysql_error());
     
   
@@ -54,7 +55,7 @@ $buyerID = $_SESSION['userid'];
         $currentprice = $row['latestPrice'];
         $num_bids = $row['bid_cnt'];
         $end_time = $row['endDate'];
-        print_listing_li($item_id, $title, $desc, $currentp, $num_bids, $end_time);
+        print_listing_li($item_id, $title, $desc, $currentprice, $num_bids, $end_time);
       }
     }
   } else {
