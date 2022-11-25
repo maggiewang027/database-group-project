@@ -56,14 +56,14 @@ if (isset($_SESSION['account_type']) && $_SESSION['account_type'] == 'buyer') {
     }
     else
     {
-        echo '<div class="text-center">You can not enter a value lower than Current bid</div>';
+        echo '<div class="text-center">You cannot enter a value lower than Current bid</div>';
         header("refresh:3;url=browse.php");
     }
 
     mysqli_close($link);
 
 } else {
-	echo '<div class="text-center">You can not place a bid. Please login as a buyer.</div>';
+	echo '<div class="text-center">You cannot place a bid. Please login as a buyer.</div>';
         header("refresh:3;url=browse.php");
 }
 
