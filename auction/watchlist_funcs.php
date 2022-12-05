@@ -1,4 +1,7 @@
+<?php include_once("database.php")?>
+
  <?php
+$buyer_id = $_SESSION['userid'];
 
 if (!isset($_POST['functionname']) || !isset($_POST['arguments'])) {
   return;
@@ -9,12 +12,16 @@ $item_id = $_POST['arguments'];
 
 if ($_POST['functionname'] == "add_to_watchlist") {
   // TODO: Update database and return success/failure.
-
+  $query = "INSERT INTO WatchList (watchListID, itemID, buyerID) VALUES (NULL, 13, 3)";
+  //$query = "INSERT INTO WatchList (watchListID, itemID, buyerID) VALUES (NULL, '$item_id', '$buyer_id')";
+  $result = mysqli_query($connection, $query);
   $res = "success";
 }
 else if ($_POST['functionname'] == "remove_from_watchlist") {
   // TODO: Update database and return success/failure.
-
+  $query = "INSERT INTO WatchList (watchListID, itemID, buyerID) VALUES (NULL, 13, 3)";
+  //$query = "DELETE FROM WatchList WHERE itemID ='$item_id' AND buyerID='$buyer_id'";
+  $result = mysqli_query($connection, $query);
   $res = "success";
 }
 
@@ -24,4 +31,5 @@ else if ($_POST['functionname'] == "remove_from_watchlist") {
 // echo json_encode($res).
 echo $res;
 
+//mysqli_close($connection);
 ?>
