@@ -59,7 +59,10 @@
     </li>
 	<li class="nav-item mx-1">
       <a class="nav-link" href="recommendations.php">Recommended</a>
-    </li>');
+    </li>
+  <li class="nav-item mx-1">
+    <a class="nav-link" href="mywatchlist.php">My Watchlist</a> 
+  </li>');
   }
   if (isset($_SESSION['account_type']) && $_SESSION['account_type'] == 'seller') {
   echo('
