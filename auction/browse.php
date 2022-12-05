@@ -37,7 +37,7 @@
           <option value="populated">populated from a database?</option>
         -->
         
-          <!--Show drop down list box----------------------------------------------------------------------------------->
+          <!--Show drop down list box-->
           <?php
           $query = "select cateName from Category";
           $result = mysqli_query($connection, $query);
@@ -46,7 +46,6 @@
             echo "<option value='$row[cateName]'>$row[cateName]</option>";
           }
           ?>
-          <!------------------------------------------------------------------------------------------------------------>
 
         </select>
       </div>
@@ -106,9 +105,9 @@
   /* TODO: Use above values to construct a query. Use this query to 
      retrieve data from the database. (If there is no form data entered,
      decide on appropriate default value/default query to make. */
-    
-    //-------------------------------------------------------------------------------------------------------- 
+
      //obtain search result   
+     //memo: default value & keep expire record?
 if($ordering == 'pricelow'){
   if($category=='all'){
     $query = "SELECT i.itemID as itemID, itemName, description, latestPrice, endDate, bid_cnt
@@ -123,11 +122,12 @@ if($ordering == 'pricelow'){
        FROM BidItem
        UNION ALL SELECT itemID,
                         startingPrice AS price
-       FROM Item) AS prices
+       FROM Item
+       WHERE concat(itemName,description) LIKE '%$keyword%'
+       ) AS prices
     GROUP BY itemID   
-     ) bi
+     ) AS bi
     WHERE i.itemID = bi.itemID
-      AND concat(itemName,description) LIKE '%$keyword%'
       ORDER BY latestPrice
     ";
     }
@@ -143,12 +143,13 @@ if($ordering == 'pricelow'){
         FROM BidItem
         UNION ALL SELECT itemID,
                          startingPrice AS price
-        FROM Item) AS prices
+        FROM Item
+        WHERE concat(itemName,description) LIKE '%$keyword%'
+        AND category = '$category' 
+        ) AS prices
      GROUP BY itemID   
-      ) bi
+      ) AS bi
      WHERE i.itemID = bi.itemID
-       AND concat(itemName,description) LIKE '%$keyword%'
-       AND category = '$category' 
        ORDER BY latestPrice
     ";
     }
@@ -166,11 +167,12 @@ if($ordering == 'pricelow'){
        FROM BidItem
        UNION ALL SELECT itemID,
                         startingPrice AS price
-       FROM Item) AS prices
+       FROM Item
+       WHERE concat(itemName,description) LIKE '%$keyword%'
+       ) AS prices
     GROUP BY itemID   
-     ) bi
+     ) AS bi
     WHERE i.itemID = bi.itemID
-      AND concat(itemName,description) LIKE '%$keyword%'
       ORDER BY latestPrice DESC
     ";
     }
@@ -186,12 +188,13 @@ if($ordering == 'pricelow'){
         FROM BidItem
         UNION ALL SELECT itemID,
                          startingPrice AS price
-        FROM Item) AS prices
+        FROM Item
+        WHERE concat(itemName,description) LIKE '%$keyword%'
+        AND category = '$category' 
+       ) AS prices
      GROUP BY itemID   
-      ) bi
+      ) AS bi
      WHERE i.itemID = bi.itemID
-       AND concat(itemName,description) LIKE '%$keyword%'
-       AND category = '$category' 
        ORDER BY latestPrice DESC
     ";
     }
@@ -209,12 +212,13 @@ if($ordering == 'pricelow'){
        FROM BidItem
        UNION ALL SELECT itemID,
                         startingPrice AS price
-       FROM Item) AS prices
+       FROM Item
+       WHERE concat(itemName,description) LIKE '%$keyword%'
+       ) AS prices
     GROUP BY itemID   
-     ) bi
+     ) AS bi
     WHERE i.itemID = bi.itemID
-      AND concat(itemName,description) LIKE '%$keyword%'
-      ORDER BY endDate DESC
+      ORDER BY endDate
     ";
     }
     else {$query = "SELECT i.itemID as itemID, itemName, description, latestPrice, endDate, bid_cnt
@@ -229,13 +233,14 @@ if($ordering == 'pricelow'){
         FROM BidItem
         UNION ALL SELECT itemID,
                          startingPrice AS price
-        FROM Item) AS prices
+        FROM Item
+        WHERE concat(itemName,description) LIKE '%$keyword%'
+        AND category = '$category' 
+        ) AS prices
      GROUP BY itemID   
-      ) bi
+      ) AS bi
      WHERE i.itemID = bi.itemID
-       AND concat(itemName,description) LIKE '%$keyword%'
-       AND category = '$category' 
-       ORDER BY endDate DESC
+       ORDER BY endDate
     ";
     }
 }
