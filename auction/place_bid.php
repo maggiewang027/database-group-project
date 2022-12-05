@@ -60,7 +60,7 @@ if (isset($_SESSION['account_type']) && $_SESSION['account_type'] == 'buyer') {
         header("refresh:3;url=listing.php?item_id=$item_id");
     }
 
-    mysqli_close($link);
+    mysqli_close($connection);
 
 } else {
 	echo '<div class="text-center">You cannot place a bid. Please login as a buyer.</div>';
