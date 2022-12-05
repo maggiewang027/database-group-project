@@ -6,13 +6,15 @@
   // Get info from the URL:
   $item_id = $_GET['item_id'];
   $_SESSION['itemid'] = $item_id;
+  $buyer_id = $_SESSION['userid'];
 
   // TODO: Use item_id to make a query to the database.
-  $query="SELECT *
+  $query="SELECT i.itemID as itemID, itemName, description, latestPrice, endDate, reservePrice, bid_cnt
   FROM Item i
   JOIN
     (SELECT itemID,
-             MAX(price) AS latestPrice
+             MAX(price) AS latestPrice,
+             COUNT(*)-1 AS bid_cnt
      FROM
        (SELECT itemID,
                bidPrice AS price
@@ -38,7 +40,8 @@
     $title=$row['itemName'];
     $description=$row['description'];
     $current_price=$row['latestPrice'];
-    $num_bids=2;
+    $reserve_price=$row['reservePrice'];
+    $num_bids=$row['bid_cnt']; //delete?
     $end_time=new DateTime($row['endDate']);
 
   } 
@@ -99,28 +102,59 @@
 
     <p>
 <?php if ($now > $end_time): ?>
-     This auction ended <?php echo(date_format($end_time, 'j M H:i')) ?>
+     This auction ended <?php echo(date_format($end_time, 'j M H:i')) ?><br>
      <!-- TODO: Print the result of the auction here? -->
+     Result: 
+     
+<?php
+
+//find out which buyer bid with highest price
+$query = "SELECT buyerID FROM BidItem WHERE itemID='$item_id' and bidPrice = '$current_price'";
+$result = mysqli_query($connection, $query);
+while($row=mysqli_fetch_array($result))
+{
+  $buyerID_highestPrice = $row['buyerID']; 
+} 
+
+//check1 if current price higher than reserve price
+//check2 if this account is a buyer account
+//check2 if this buyer account is the buyer account with highest bid price
+
+if($current_price >= $reserve_price){
+  if(isset($_SESSION['account_type']) && $_SESSION['account_type'] == 'buyer'){
+    if($buyerID_highestPrice == $buyer_id){
+      echo('Bid successful');
+    }else{
+      echo('Outbid');
+    }
+  }else{
+    echo('Auction finished');
+  }
+}else{
+  echo('Auction failed, the highest price is lower than the reserve price');
+}
+      
+?>
+
 <?php else: ?>
      Auction ends <?php echo(date_format($end_time, 'j M H:i') . $time_remaining) ?></p >  
     <p class="lead">Current bid: £<?php echo(number_format($current_price, 2)) ?></p >
 
-<?php
-if (isset($_SESSION['account_type']) && $_SESSION['account_type'] == 'buyer') {
-  echo('
-    <!-- Bidding form -->
-    <form method="POST" action="place_bid.php">
-      <div class="input-group">
-        <div class="input-group-prepend">
-          <span class="input-group-text">£</span>
-        </div>
+    <?php
+    if (isset($_SESSION['account_type']) && $_SESSION['account_type'] == 'buyer') {
+     echo('
+      <!-- Bidding form -->
+     <form method="POST" action="place_bid.php">
+     <div class="input-group">
+     <div class="input-group-prepend">
+     <span class="input-group-text">£</span>
+     </div>
      <input type="number" class="form-control" id="bid" name="bid">
-      </div>
-      <button type="submit" class="btn btn-primary form-control">Place bid</button>
-    </form>');
+     </div>
+     <button type="submit" class="btn btn-primary form-control">Place bid</button>
+     </form>');
   }
 ?>
-    
 <?php endif ?>
 
   
