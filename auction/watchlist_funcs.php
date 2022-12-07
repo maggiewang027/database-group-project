@@ -12,15 +12,14 @@ $item_id = $_POST['arguments'];
 
 if ($_POST['functionname'] == "add_to_watchlist") {
   // TODO: Update database and return success/failure.
-  $query = "INSERT INTO WatchList (watchListID, itemID, buyerID) VALUES (NULL, 13, 3)";
+  $query = "INSERT INTO WatchList (watchListID, itemID, buyerID) VALUES (NULL, 1 ,1)";
   //$query = "INSERT INTO WatchList (watchListID, itemID, buyerID) VALUES (NULL, '$item_id', '$buyer_id')";
   $result = mysqli_query($connection, $query);
   $res = "success";
 }
 else if ($_POST['functionname'] == "remove_from_watchlist") {
   // TODO: Update database and return success/failure.
-  $query = "INSERT INTO WatchList (watchListID, itemID, buyerID) VALUES (NULL, 13, 3)";
-  //$query = "DELETE FROM WatchList WHERE itemID ='$item_id' AND buyerID='$buyer_id'";
+  $query = "DELETE FROM WatchList WHERE itemID ='1' AND buyerID='1'";
   $result = mysqli_query($connection, $query);
   $res = "success";
 }
