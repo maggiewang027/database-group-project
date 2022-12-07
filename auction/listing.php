@@ -7,6 +7,7 @@
   $item_id = $_GET['item_id'];
   $_SESSION['itemid'] = $item_id;
   $buyer_id = $_SESSION['userid'];
+  $has_session = $_SESSION['logged_in'];
 
   // TODO: Use item_id to make a query to the database.
   $query="SELECT i.itemID as itemID, itemName, description, latestPrice, endDate, reservePrice, bid_cnt
@@ -61,8 +62,18 @@
   // TODO: If the user has a session, use it to make a query to the database
   //       to determine if the user is already watching this item.
   //       For now, this is hardcoded.
-  $has_session = true;
-  $watching = false;
+  
+  //$has_session = true;
+  //$watching = false;
+
+  $query = "SELECT buyerID from WatchList where buyerID = $buyer_id ";
+  $result = mysqli_query($connection, $query);
+  if(mysqli_num_rows($result) == 0){
+    $watching = false;
+  }
+  else{
+    $watching = true;
+  }
 ?>
 
 
@@ -78,13 +89,18 @@
      just as easily use PHP as in other places in the code */
   if ($now < $end_time):
 ?>
+
     <div id="watch_nowatch" <?php if ($has_session && $watching) echo('style="display: none"');?> >
       <button type="button" class="btn btn-outline-secondary btn-sm" onclick="addToWatchlist()">+ Add to watchlist</button>
     </div>
+
     <div id="watch_watching" <?php if (!$has_session || !$watching) echo('style="display: none"');?> >
       <button type="button" class="btn btn-success btn-sm" disabled>Watching</button>
       <button type="button" class="btn btn-danger btn-sm" onclick="removeFromWatchlist()">Remove watch</button>
     </div>
+
+
+
 <?php endif /* Print nothing otherwise */ ?>
   </div>
 </div>
