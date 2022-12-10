@@ -54,7 +54,7 @@ $buyerID = $_SESSION['userid'];
         $desc = $row['description'];
         $currentprice = $row['latestPrice'];
         $num_bids = $row['bid_cnt'];
-        $end_time = $row['endDate'];
+        $end_time = new DateTime($row['endDate']);
         print_listing_li($item_id, $title, $desc, $currentprice, $num_bids, $end_time);
       }
     }
