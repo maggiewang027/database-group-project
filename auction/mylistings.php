@@ -7,6 +7,15 @@
 
 </div>
 
+<?php
+  if (!isset($_GET['page'])) {
+    $curr_page = 1;
+  }
+  else {
+    $curr_page = $_GET['page'];
+  }
+?>
+
 <div class="container mt-5">
 
 <ul class="list-group">
@@ -42,6 +51,14 @@
     $result = mysqli_query($connection, $query);
     //$rowcount=mysqli_num_rows($result);
     //printf("Result set has %d rows.\n",$rowcount);
+          /* For the purposes of pagination, it would also be helpful to know the
+     total number of results that satisfy the above query */
+    $num_results = mysqli_num_rows($result); // TODO: Calculate me for real
+    $results_per_page = 5;
+    $max_page = ceil($num_results / $results_per_page);
+    $page_start = ($curr_page-1) * $results_per_page;  
+    $query .= " LIMIT " . $page_start . ',' . $results_per_page;
+    $result = mysqli_query($connection, $query);
 
     while ($row = mysqli_fetch_assoc($result)) {
         $item_id = $row['itemID'];
@@ -92,7 +109,7 @@ mysqli_close($connection);
   if ($curr_page != 1) {
     echo('
     <li class="page-item">
-      <a class="page-link" href="browse.php?' . $querystring . 'page=' . ($curr_page - 1) . '" aria-label="Previous">
+      <a class="page-link" href="mylistings.php?' . $querystring . 'page=' . ($curr_page - 1) . '" aria-label="Previous">
         <span aria-hidden="true"><i class="fa fa-arrow-left"></i></span>
         <span class="sr-only">Previous</span>
       </a>
@@ -113,19 +130,21 @@ mysqli_close($connection);
     
     // Do this in any case
     echo('
-      <a class="page-link" href="browse.php?' . $querystring . 'page=' . $i . '">' . $i . '</a>
+      <a class="page-link" href="mylistings.php?' . $querystring . 'page=' . $i . '">' . $i . '</a>
     </li>');
   }
   
   if ($curr_page != $max_page) {
     echo('
     <li class="page-item">
-      <a class="page-link" href="browse.php?' . $querystring . 'page=' . ($curr_page + 1) . '" aria-label="Next">
+      <a class="page-link" href="mylistings.php?' . $querystring . 'page=' . ($curr_page + 1) . '" aria-label="Next">
         <span aria-hidden="true"><i class="fa fa-arrow-right"></i></span>
         <span class="sr-only">Next</span>
       </a>
     </li>');
   }
+
+mysqli_close($connection);
 ?>
 
   </ul>
