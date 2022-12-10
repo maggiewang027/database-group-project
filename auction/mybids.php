@@ -3,7 +3,7 @@
 
 <div class="container">
 
-<h2 class="my-3">My bids</h2>
+<h2 class="my-3">My Bids</h2>
 
 </div>
 
