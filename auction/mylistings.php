@@ -20,24 +20,24 @@
     $seller_id = $_SESSION['userid'];
     // Query: insert the auction item to the database
     $query = "SELECT i.itemID as itemID, itemName, description, latestPrice, endDate, bid_cnt
-    FROM Item i
-    JOIN (
-    SELECT itemID,
-           MAX(price) AS latestPrice,
-           COUNT(*)-1 AS bid_cnt
-    FROM
+     FROM Item i
+     JOIN (
+     SELECT itemID,
+            MAX(price) AS latestPrice,
+            COUNT(*)-1 AS bid_cnt
+     FROM
       (SELECT itemID,
               bidPrice AS price
        FROM BidItem
        UNION ALL SELECT itemID,
                         startingPrice AS price
        FROM Item
-       WHERE concat(itemName,description) LIKE '%$keyword%'
        ) AS prices
-    GROUP BY itemID   
+     GROUP BY itemID
      ) AS bi
-    WHERE i.itemID = bi.itemID
-      ORDER BY endDate
+     ON i.itemID = bi.itemID
+     WHERE sellerID = '$seller_id'
+     ORDER BY endDate
     ";
     $result = mysqli_query($connection, $query);
     //$rowcount=mysqli_num_rows($result);
