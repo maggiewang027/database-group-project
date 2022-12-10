@@ -4,9 +4,9 @@
 
 <?php
   // Get info from the URL:
-  $item_id = $_GET['item_id'];
+  $item_id = settype($_GET['item_id'],'int');
   $_SESSION['itemid'] = $item_id;
-  $buyer_id = $_SESSION['userid'];
+  $buyer_id = settype($_SESSION['userid'],'int');
   $has_session = $_SESSION['logged_in'];
 
   // TODO: Use item_id to make a query to the database.
@@ -66,7 +66,7 @@
   //$has_session = true;
   //$watching = false;
 
-  $query = "SELECT buyerID from WatchList where buyerID = $buyer_id and itemID = $item_id";
+  $query = "SELECT buyerID from WatchList where buyerID = $buyer_id ";
   $result = mysqli_query($connection, $query);
   if(mysqli_num_rows($result) == 0){
     $watching = false;
@@ -87,7 +87,7 @@
 <?php
   /* The following watchlist functionality uses JavaScript, but could
      just as easily use PHP as in other places in the code */
-  if ($now < $end_time):
+  if ($now < $end_time && isset($_SESSION['account_type']) && $_SESSION['account_type'] == 'buyer'):
 ?>
 
     <div id="watch_nowatch" <?php if ($has_session && $watching) echo('style="display: none"');?> >
