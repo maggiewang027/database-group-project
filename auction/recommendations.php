@@ -24,21 +24,41 @@
   $buyer_id = $_SESSION['userid'];
   
   // TODO: Perform a query to pull up auctions they might be interested in.
-  $query = "SELECT *
-  FROM Item
-  WHERE itemID in (
-  SELECT itemID
-  FROM BidItem
-  WHERE buyerID IN
-      (SELECT buyerID
-       FROM BidItem
-       WHERE itemID IN
-           (SELECT itemID
-            FROM BidItem
-            WHERE buyerID = '$buyer_id')
-         AND buyerID <> '$buyer_id')
-  ) AND endDate > now()
-  ORDER BY endDate 
+  $query = "SELECT item_info.itemID AS itemID,
+         itemName,
+         description,
+         latestPrice,
+         endDate,
+         bid_cnt
+  FROM
+    (SELECT *
+     FROM Item
+     WHERE itemID IN
+         (SELECT itemID
+          FROM BidItem
+          WHERE buyerID IN
+              (SELECT buyerID
+               FROM BidItem
+               WHERE itemID IN
+                   (SELECT itemID
+                    FROM BidItem
+                    WHERE buyerID = '$buyer_id')
+                 AND buyerID <> '$buyer_id'))
+       AND endDate > now()) AS item_info
+  JOIN
+    ( SELECT itemID,
+             MAX(price) AS latestPrice,
+             count(*)-1 AS bid_cnt
+     FROM
+       (SELECT itemID,
+               bidPrice AS price
+        FROM BidItem
+        UNION ALL SELECT itemID,
+                         startingPrice AS price
+        FROM Item) AS prices
+     GROUP BY itemID) AS bi
+  WHERE item_info.itemID = bi.itemID
+  ORDER BY endDate
   ";
   $result = mysqli_query($connection, $query);
 
