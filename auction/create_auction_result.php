@@ -7,9 +7,10 @@
     include_once('database.php');
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-        
+
         if (!empty($_POST['auctionTitle']) && !empty($_POST['auctionCategory']) && !empty($_POST['auctionStartPrice']) && !empty($_POST['auctionEndDate'])) {
             // Set the variables
+            //$item_id = uniqid();
             $title = mysqli_real_escape_string($connection, $_POST['auctionTitle']);
             $details = mysqli_real_escape_string($connection, $_POST['auctionDetails']);
             $category = mysqli_real_escape_string($connection, $_POST['auctionCategory']);
@@ -20,10 +21,9 @@
                 $reserve_price = $start_price;
             }
             $end_date = $_POST["auctionEndDate"];
-            $status = 'in progress';
-            $seller_id = $_SESSION['userid'];
+            $seller_id = settype($_SESSION['userid'],'int');
             // Query: insert the auction item to the database
-            $create_auction = "INSERT INTO Item (itemID, itemName, description, category, startingPrice, reservePrice, endDate, status, sellerID) VALUES (NULL, '$title', '$details', '$category', '$start_price', '$reserve_price', '$end_date', '$status', '$seller_id')";
+            $create_auction = "INSERT INTO Item (itemID, itemName, description, category, startingPrice, reservePrice, endDate, sellerID) VALUES (NULL, '$title', '$details', '$category', '$start_price', '$reserve_price', '$end_date', '$seller_id')";
             $result = mysqli_query($connection, $create_auction);
             // If all is successful, let user know.
             echo('<div class="text-center">Auction successfully created! <a href="mylistings.php">View your new listing.</a></div>');
