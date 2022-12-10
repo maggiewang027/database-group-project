@@ -15,10 +15,9 @@
   
   
   // TODO: Check user's credentials (cookie/session).
-
-  // TODO: Perform a query to pull up auctions they might be interested in.
   $buyer_id = $_SESSION['userid'];
-
+  
+  // TODO: Perform a query to pull up auctions they might be interested in.
   $query = "SELECT *
   FROM Item
   WHERE itemID in (
