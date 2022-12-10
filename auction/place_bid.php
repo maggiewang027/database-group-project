@@ -4,8 +4,8 @@
 
 
 <?php
-$item_id = settype($_SESSION['itemid'],'int');//TODO
-$buyer_id = settype($_SESSION['userid'],'int');
+$item_id = $_SESSION['itemid'];//TODO
+$buyer_id = $_SESSION['userid'];
 
 // TODO: Extract $_POST variables, check they're OK, and attempt to make a bid.
 // Notify user of success/failure and redirect/give navigation options.
