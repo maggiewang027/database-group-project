@@ -15,7 +15,7 @@
     <div class="col-md-5 pr-0">
       <div class="form-group">
         <label for="keyword" class="sr-only">Search keyword:</label>
-	    <div class="input-group">
+      <div class="input-group">
           <div class="input-group-prepend">
             <span class="input-group-text bg-transparent pr-0 text-muted">
               <i class="fa fa-search"></i>
@@ -277,7 +277,7 @@ if($num_results == 0){
       $description = $row['description'];
       $current_price = $row['latestPrice'];
       $num_bids = $row['bid_cnt'];
-      $end_date = $row['endDate'];
+      $end_date = new DateTime($row['endDate']);
       print_listing_li($item_id, $title, $description, $current_price, $num_bids, $end_date);
     }
 ?>
