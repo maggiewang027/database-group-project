@@ -57,12 +57,9 @@
                                 FROM BidItem
                                 WHERE buyerID = '$buyer_id')
                             AND buyerID <> '$buyer_id'))
-                  AND endDate > now() --only display active auctions
+                  AND endDate > now()
                   ) AS item_info
               JOIN
-              -- Find out the latest(highest) price of each item and count the bid number of the item
-              -- For item has bid records, the max price is its latest price,
-              -- for an item has no bid record, the startingPrice is its latest price
                 ( SELECT itemID,
                         MAX(price) AS latestPrice,
                         count(*)-1 AS bid_cnt
@@ -74,9 +71,10 @@
                                     startingPrice AS price
                     FROM Item) AS prices
                 GROUP BY itemID) AS bi
-              WHERE item_info.itemID = bi.itemID -- link tables by itemID
-              ORDER BY endDate -- display by expire order (the soonest expire one shows first)
+              WHERE item_info.itemID = bi.itemID
+              ORDER BY endDate 
   ";
+  
   $result = mysqli_query($connection, $query);
   /* For the purposes of pagination, it would also be helpful to know the
      total number of results that satisfy the above query */
