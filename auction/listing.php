@@ -66,7 +66,7 @@
   //$has_session = true;
   //$watching = false;
 
-  $query = "SELECT buyerID from WatchList where buyerID = $buyer_id and itemID = '$item_id";
+  $query = "SELECT buyerID from WatchList where buyerID = '$buyer_id' and itemID = '$item_id'";
   $result = mysqli_query($connection, $query);
   if(mysqli_num_rows($result) == 0){
     $watching = false;
