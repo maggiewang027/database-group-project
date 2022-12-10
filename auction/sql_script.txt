@@ -15,8 +15,8 @@ CREATE DATABASE auction
 #DROP USER 'auctadmin'@'localhost';
 #FLUSH PRIVILEGES;
   
-CREATE USER 'auctadmin'@'localhost'
-	IDENTIFIED BY 'adminpassword';
+##CREATE USER 'auctadmin'@'localhost'
+##	IDENTIFIED BY 'adminpassword';
 
 GRANT SELECT, UPDATE, INSERT, DELETE
     ON auction.*
