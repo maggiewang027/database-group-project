@@ -4,8 +4,8 @@
 
 
 <?php
-$item_id = $_SESSION['itemid'];//TODO
-$buyer_id = $_SESSION['userid'];
+$item_id = settype($_SESSION['itemid'],'int');//TODO
+$buyer_id = settype($_SESSION['userid'],'int');
 
 // TODO: Extract $_POST variables, check they're OK, and attempt to make a bid.
 // Notify user of success/failure and redirect/give navigation options.
@@ -38,8 +38,8 @@ if (isset($_SESSION['account_type']) && $_SESSION['account_type'] == 'buyer') {
 
     if ($bid > $latest_price)
     {
-        $query = "INSERT INTO BidItem (bidID, itemID, bidTime, bidPrice, buyerID, status) 
-        VALUES (NULL, '$item_id', now(), '$bid', '$buyer_id', 'InAuction')";          
+        $query = "INSERT INTO BidItem (bidID, itemID, bidTime, bidPrice, buyerID) 
+        VALUES (NULL, '$item_id', now(), '$bid', '$buyer_id')";          
         $result = mysqli_query($connection, $query);
 
         if($result)
