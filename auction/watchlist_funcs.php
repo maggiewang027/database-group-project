@@ -1,19 +1,20 @@
 <?php include_once("database.php")?>
 
  <?php
-$buyer_id = $_SESSION['userid'];
+if ($_SERVER['REQUEST_METHOD'] == 'POST'){
+$buyer_id = settype($_SESSION['userid'],'int');
 
 if (!isset($_POST['functionname']) || !isset($_POST['arguments'])) {
   return;
 }
 
 // Extract arguments from the POST variables:
-$item_id = $_POST['arguments'];
+$item_id = settype($_POST['arguments'],'int');
 
 if ($_POST['functionname'] == "add_to_watchlist") {
   // TODO: Update database and return success/failure.
-  $query = "INSERT INTO WatchList (watchListID, itemID, buyerID) VALUES (NULL, 1 ,1)";
-  //$query = "INSERT INTO WatchList (watchListID, itemID, buyerID) VALUES (NULL, '$item_id', '$buyer_id')";
+  //$query = "INSERT INTO WatchList (watchListID, itemID, buyerID) VALUES (NULL, 1 ,1)";
+  $query = "INSERT INTO WatchList (watchListID, itemID, buyerID) VALUES (NULL, '$item_id', '$buyer_id')";
   $result = mysqli_query($connection, $query);
   $res = "success";
 }
@@ -29,6 +30,6 @@ else if ($_POST['functionname'] == "remove_from_watchlist") {
 // so be careful. You can also return JSON objects (in string form) using
 // echo json_encode($res).
 echo $res;
-
+}
 //mysqli_close($connection);
 ?>
