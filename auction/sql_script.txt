@@ -26,7 +26,7 @@ USE auction;
 
 CREATE TABLE User
 (
-  userID CHAR(34) PRIMARY KEY,
+  userID INTEGER AUTO_INCREMENT PRIMARY KEY,
   displayName VARCHAR(50) NOT NULL,
   email VARCHAR(50) NOT NULL,
   password VARCHAR(50) NOT NULL,
@@ -35,34 +35,34 @@ CREATE TABLE User
 
 CREATE TABLE Category
 (
-  cateID CHAR(34) PRIMARY KEY,
+  cateID INTEGER AUTO_INCREMENT PRIMARY KEY,
   cateName VARCHAR(50) NOT NULL
 );
 
 INSERT INTO Category 
 VALUES
-('1', 'Collectables'),
-('2', 'Fashion'),
-('3', 'Beauty'),
-('4', 'Baby'),
-('5', 'Home'),
-('6', 'Leisure'),
-('7', 'Sport'),
-('8', 'Media'),
-('9', 'Office'),
-('10', 'Electronics'),
-('11', 'Others');
+(NULL, 'Collectables'),
+(NULL, 'Fashion'),
+(NULL, 'Beauty'),
+(NULL, 'Baby'),
+(NULL, 'Home'),
+(NULL, 'Leisure'),
+(NULL, 'Sport'),
+(NULL, 'Media'),
+(NULL, 'Office'),
+(NULL, 'Electronics'),
+(NULL, 'Others');
 
 CREATE TABLE Item
 (
-  itemID CHAR(34) PRIMARY KEY,
+  itemID INTEGER AUTO_INCREMENT PRIMARY KEY,
   itemName VARCHAR(50) NOT NULL,
   description TEXT NOT NULL,
   category VARCHAR(50) NOT NULL,
   startingPrice INTEGER NOT NULL,
   reservePrice INTEGER NOT NULL,
   endDate DATETIME NOT NULL,
-  sellerID CHAR(34) NOT NULL
+  sellerID INTEGER NOT NULL
 );
 
 CREATE TABLE BidItem(
@@ -70,7 +70,7 @@ CREATE TABLE BidItem(
     itemID INTEGER NOT NULL,
     bidTime DATETIME NOT NULL,
     bidPrice INTEGER NOT NULL,
-    buyerID CHAR(34) NOT NULL
+    buyerID INTEGER NOT NULL
 );
 
 CREATE TABLE WatchList
