@@ -123,12 +123,12 @@ if($ordering == 'pricelow'){
        UNION ALL SELECT itemID,
                         startingPrice AS price
        FROM Item
-       WHERE concat(itemName,description) LIKE '%$keyword%'
        ) AS prices
     GROUP BY itemID   
      ) AS bi
-    WHERE i.itemID = bi.itemID
-      ORDER BY latestPrice
+     WHERE i.itemID = bi.itemID
+     AND concat(itemName,description) LIKE '%$keyword%' 
+     ORDER BY latestPrice
     ";
     }
     else {$query = "SELECT i.itemID as itemID, itemName, description, latestPrice, endDate, bid_cnt
@@ -143,14 +143,14 @@ if($ordering == 'pricelow'){
         FROM BidItem
         UNION ALL SELECT itemID,
                          startingPrice AS price
-        FROM Item
-        WHERE concat(itemName,description) LIKE '%$keyword%'
-        AND category = '$category' 
+        FROM Item 
         ) AS prices
      GROUP BY itemID   
       ) AS bi
      WHERE i.itemID = bi.itemID
-       ORDER BY latestPrice
+     AND concat(itemName,description) LIKE '%$keyword%'
+     AND category = '$category'
+     ORDER BY latestPrice
     ";
     }
 } elseif($ordering == 'pricehigh'){
@@ -168,12 +168,12 @@ if($ordering == 'pricelow'){
        UNION ALL SELECT itemID,
                         startingPrice AS price
        FROM Item
-       WHERE concat(itemName,description) LIKE '%$keyword%'
        ) AS prices
     GROUP BY itemID   
      ) AS bi
     WHERE i.itemID = bi.itemID
-      ORDER BY latestPrice DESC
+    AND concat(itemName,description) LIKE '%$keyword%'
+    ORDER BY latestPrice DESC
     ";
     }
     else {$query = "SELECT i.itemID as itemID, itemName, description, latestPrice, endDate, bid_cnt
@@ -189,12 +189,12 @@ if($ordering == 'pricelow'){
         UNION ALL SELECT itemID,
                          startingPrice AS price
         FROM Item
-        WHERE concat(itemName,description) LIKE '%$keyword%'
-        AND category = '$category' 
        ) AS prices
      GROUP BY itemID   
       ) AS bi
      WHERE i.itemID = bi.itemID
+     AND concat(itemName,description) LIKE '%$keyword%'
+     AND category = '$category' 
        ORDER BY latestPrice DESC
     ";
     }
@@ -213,12 +213,12 @@ if($ordering == 'pricelow'){
        UNION ALL SELECT itemID,
                         startingPrice AS price
        FROM Item
-       WHERE concat(itemName,description) LIKE '%$keyword%'
        ) AS prices
     GROUP BY itemID   
      ) AS bi
     WHERE i.itemID = bi.itemID
-      ORDER BY endDate
+    AND concat(itemName,description) LIKE '%$keyword%'
+    ORDER BY endDate
     ";
     }
     else {$query = "SELECT i.itemID as itemID, itemName, description, latestPrice, endDate, bid_cnt
@@ -233,14 +233,14 @@ if($ordering == 'pricelow'){
         FROM BidItem
         UNION ALL SELECT itemID,
                          startingPrice AS price
-        FROM Item
-        WHERE concat(itemName,description) LIKE '%$keyword%'
-        AND category = '$category' 
+        FROM Item 
         ) AS prices
      GROUP BY itemID   
       ) AS bi
      WHERE i.itemID = bi.itemID
-       ORDER BY endDate
+     AND concat(itemName,description) LIKE '%$keyword%'
+     AND category = '$category'
+     ORDER BY endDate
     ";
     }
 }
