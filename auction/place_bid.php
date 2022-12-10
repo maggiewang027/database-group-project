@@ -4,7 +4,7 @@
 
 
 <?php
-$item_id = $_SESSION['itemid'];//TODO
+$item_id = $_SESSION['itemid'];
 $buyer_id = $_SESSION['userid'];
 
 // TODO: Extract $_POST variables, check they're OK, and attempt to make a bid.
