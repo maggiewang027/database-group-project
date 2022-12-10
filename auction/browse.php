@@ -15,7 +15,7 @@
     <div class="col-md-5 pr-0">
       <div class="form-group">
         <label for="keyword" class="sr-only">Search keyword:</label>
-	    <div class="input-group">
+      <div class="input-group">
           <div class="input-group-prepend">
             <span class="input-group-text bg-transparent pr-0 text-muted">
               <i class="fa fa-search"></i>
@@ -123,12 +123,12 @@ if($ordering == 'pricelow'){
        UNION ALL SELECT itemID,
                         startingPrice AS price
        FROM Item
+       WHERE concat(itemName,description) LIKE '%$keyword%'
        ) AS prices
     GROUP BY itemID   
      ) AS bi
-     WHERE i.itemID = bi.itemID
-     AND concat(itemName,description) LIKE '%$keyword%' 
-     ORDER BY latestPrice
+    WHERE i.itemID = bi.itemID
+      ORDER BY latestPrice
     ";
     }
     else {$query = "SELECT i.itemID as itemID, itemName, description, latestPrice, endDate, bid_cnt
@@ -143,14 +143,13 @@ if($ordering == 'pricelow'){
         FROM BidItem
         UNION ALL SELECT itemID,
                          startingPrice AS price
-        FROM Item 
+        FROM Item
+        WHERE concat(itemName,description) LIKE '%$keyword%'
         ) AS prices
      GROUP BY itemID   
       ) AS bi
-     WHERE i.itemID = bi.itemID
-     AND concat(itemName,description) LIKE '%$keyword%'
-     AND category = '$category'
-     ORDER BY latestPrice
+     WHERE i.itemID = bi.itemID AND category = '$category'
+       ORDER BY latestPrice
     ";
     }
 } elseif($ordering == 'pricehigh'){
@@ -168,12 +167,12 @@ if($ordering == 'pricelow'){
        UNION ALL SELECT itemID,
                         startingPrice AS price
        FROM Item
+       WHERE concat(itemName,description) LIKE '%$keyword%'
        ) AS prices
     GROUP BY itemID   
      ) AS bi
     WHERE i.itemID = bi.itemID
-    AND concat(itemName,description) LIKE '%$keyword%'
-    ORDER BY latestPrice DESC
+      ORDER BY latestPrice DESC
     ";
     }
     else {$query = "SELECT i.itemID as itemID, itemName, description, latestPrice, endDate, bid_cnt
@@ -189,12 +188,11 @@ if($ordering == 'pricelow'){
         UNION ALL SELECT itemID,
                          startingPrice AS price
         FROM Item
+        WHERE concat(itemName,description) LIKE '%$keyword%'
        ) AS prices
      GROUP BY itemID   
       ) AS bi
-     WHERE i.itemID = bi.itemID
-     AND concat(itemName,description) LIKE '%$keyword%'
-     AND category = '$category' 
+     WHERE i.itemID = bi.itemID AND category = '$category'
        ORDER BY latestPrice DESC
     ";
     }
@@ -213,12 +211,12 @@ if($ordering == 'pricelow'){
        UNION ALL SELECT itemID,
                         startingPrice AS price
        FROM Item
+       WHERE concat(itemName,description) LIKE '%$keyword%'
        ) AS prices
     GROUP BY itemID   
      ) AS bi
     WHERE i.itemID = bi.itemID
-    AND concat(itemName,description) LIKE '%$keyword%'
-    ORDER BY endDate
+      ORDER BY endDate
     ";
     }
     else {$query = "SELECT i.itemID as itemID, itemName, description, latestPrice, endDate, bid_cnt
@@ -233,14 +231,13 @@ if($ordering == 'pricelow'){
         FROM BidItem
         UNION ALL SELECT itemID,
                          startingPrice AS price
-        FROM Item 
+        FROM Item
+        WHERE concat(itemName,description) LIKE '%$keyword%'
         ) AS prices
      GROUP BY itemID   
       ) AS bi
-     WHERE i.itemID = bi.itemID
-     AND concat(itemName,description) LIKE '%$keyword%'
-     AND category = '$category'
-     ORDER BY endDate
+     WHERE i.itemID = bi.itemID AND category = '$category'
+       ORDER BY endDate
     ";
     }
 }
@@ -250,9 +247,13 @@ $result = mysqli_query($connection, $query);
 
   /* For the purposes of pagination, it would also be helpful to know the
      total number of results that satisfy the above query */
-  $num_results = mysqli_num_rows($result); // TODO: Calculate me for real
-  $results_per_page = 3;
-  $max_page = ceil($num_results / $results_per_page);
+$num_results = mysqli_num_rows($result); // TODO: Calculate me for real
+$results_per_page = 5;
+$max_page = ceil($num_results / $results_per_page);
+$page_start = ($curr_page-1) * $results_per_page;  
+$query .= " LIMIT " . $page_start . ',' . $results_per_page;
+$result = mysqli_query($connection, $query);
+
 ?>
 
 <div class="container mt-5">
@@ -277,7 +278,7 @@ if($num_results == 0){
       $description = $row['description'];
       $current_price = $row['latestPrice'];
       $num_bids = $row['bid_cnt'];
-      $end_date = New DateTime($row['endDate']);
+      $end_date = new DateTime($row['endDate']);
       print_listing_li($item_id, $title, $description, $current_price, $num_bids, $end_date);
     }
 ?>
