@@ -21,7 +21,7 @@
                 $reserve_price = $start_price;
             }
             $end_date = $_POST["auctionEndDate"];
-            $seller_id = settype($_SESSION['userid'],'int');
+            $seller_id = $_SESSION['userid'];
             // Query: insert the auction item to the database
             $create_auction = "INSERT INTO Item (itemID, itemName, description, category, startingPrice, reservePrice, endDate, sellerID) VALUES (NULL, '$title', '$details', '$category', '$start_price', '$reserve_price', '$end_date', '$seller_id')";
             $result = mysqli_query($connection, $create_auction);
