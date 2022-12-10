@@ -1,6 +1,7 @@
 <?php include_once("database.php")?>
 
  <?php
+session_start();
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
 $buyer_id = $_SESSION['userid'];
 
@@ -9,7 +10,7 @@ if (!isset($_POST['functionname']) || !isset($_POST['arguments'])) {
 }
 
 // Extract arguments from the POST variables:
-$item_id = $_POST['arguments'];
+$item_id = $_POST['arguments'][0];
 
 if ($_POST['functionname'] == "add_to_watchlist") {
   // TODO: Update database and return success/failure.
@@ -20,7 +21,7 @@ if ($_POST['functionname'] == "add_to_watchlist") {
 }
 else if ($_POST['functionname'] == "remove_from_watchlist") {
   // TODO: Update database and return success/failure.
-  $query = "DELETE FROM WatchList WHERE itemID ='1' AND buyerID='1'";
+  $query = "DELETE FROM WatchList WHERE itemID ='$item_id' AND buyerID='$buyer_id'";
   $result = mysqli_query($connection, $query);
   $res = "success";
 }
