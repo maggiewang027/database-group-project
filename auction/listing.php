@@ -4,9 +4,9 @@
 
 <?php
   // Get info from the URL:
-  $item_id = settype($_GET['item_id'],'int');
+  $item_id = $_GET['item_id'];
   $_SESSION['itemid'] = $item_id;
-  $buyer_id = settype($_SESSION['userid'],'int');
+  $buyer_id = $_SESSION['userid'];
   $has_session = $_SESSION['logged_in'];
 
   // TODO: Use item_id to make a query to the database.
@@ -66,7 +66,7 @@
   //$has_session = true;
   //$watching = false;
 
-  $query = "SELECT buyerID from WatchList where buyerID = $buyer_id ";
+  $query = "SELECT buyerID from WatchList where buyerID = $buyer_id and itemID = '$item_id";
   $result = mysqli_query($connection, $query);
   if(mysqli_num_rows($result) == 0){
     $watching = false;
@@ -179,7 +179,6 @@ if($current_price >= $reserve_price){
 </div> <!-- End of row #2 -->
 
 
-<?php mysqli_close($connection)?>
 <?php include_once("footer.php")?>
 
 
