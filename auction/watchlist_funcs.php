@@ -2,14 +2,14 @@
 
  <?php
 if ($_SERVER['REQUEST_METHOD'] == 'POST'){
-$buyer_id = settype($_SESSION['userid'],'int');
+$buyer_id = $_SESSION['userid'];
 
 if (!isset($_POST['functionname']) || !isset($_POST['arguments'])) {
   return;
 }
 
 // Extract arguments from the POST variables:
-$item_id = settype($_POST['arguments'],'int');
+$item_id = $_POST['arguments'];
 
 if ($_POST['functionname'] == "add_to_watchlist") {
   // TODO: Update database and return success/failure.
