@@ -6,6 +6,12 @@
 
 <h2 class="my-3">Recommendations for you</h2>
 
+</div>
+
+<div class="container mt-5">
+
+<ul class="list-group">
+
 <?php
   // This page is for showing a buyer recommended items based on their bid 
   // history. It will be pretty similar to browse.php, except there is no 
@@ -50,3 +56,5 @@
 
   mysqli_close($connection);
 ?>
+</ul>
+</div>
