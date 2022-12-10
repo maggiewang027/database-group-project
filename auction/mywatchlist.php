@@ -6,6 +6,12 @@
 
 <h2 class="my-3">My Watchlist</h2>
 
+</div>
+
+<div class="container mt-5">
+
+<ul class="list-group">
+
 <?php
   // This page is for showing a user the auctions they've bid on.
   // It will be pretty similar to browse.php, except there is no search bar.
@@ -63,5 +69,8 @@ $buyerID = $_SESSION['userid'];
     echo '<button type="button" class="btn nav-link" data-toggle="modal" data-target="#loginModal">Login</button>';
   }
 ?>
+
+</ul>
+</div>
 
 <?php include_once("footer.php")?>
