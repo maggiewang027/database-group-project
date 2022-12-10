@@ -33,21 +33,49 @@
   $buyer_id = $_SESSION['userid'];
   
   // TODO: Perform a query to pull up auctions they might be interested in.
-  $query = "SELECT *
-  FROM Item
-  WHERE itemID in (
-  SELECT itemID
-  FROM BidItem
-  WHERE buyerID IN
-      (SELECT buyerID
-       FROM BidItem
-       WHERE itemID IN
-           (SELECT itemID
-            FROM BidItem
-            WHERE buyerID = '$buyer_id')
-         AND buyerID <> '$buyer_id')
-  ) AND endDate > now()
-  ORDER BY endDate 
+  // For a specific buyer, recommend the buyer things by 
+  // finding other buyers who are similar to this buyer and recommend things that other buyers have bid on
+  // method for measuring the similarity is whether they have bid for the same items
+
+  $query = "SELECT  item_info.itemID AS itemID,
+                    itemName,
+                    description,
+                    latestPrice,
+                    endDate,
+                    bid_cnt
+              FROM
+                (SELECT *
+                FROM Item
+                WHERE itemID IN
+                    (SELECT itemID
+                      FROM BidItem
+                      WHERE buyerID IN
+                          (SELECT buyerID
+                          FROM BidItem
+                          WHERE itemID IN
+                              (SELECT itemID
+                                FROM BidItem
+                                WHERE buyerID = '$buyer_id')
+                            AND buyerID <> '$buyer_id'))
+                  AND endDate > now() --only display active auctions
+                  ) AS item_info
+              JOIN
+              -- Find out the latest(highest) price of each item and count the bid number of the item
+              -- For item has bid records, the max price is its latest price,
+              -- for an item has no bid record, the startingPrice is its latest price
+                ( SELECT itemID,
+                        MAX(price) AS latestPrice,
+                        count(*)-1 AS bid_cnt
+                FROM
+                  (SELECT itemID,
+                          bidPrice AS price
+                    FROM BidItem
+                    UNION ALL SELECT itemID,
+                                    startingPrice AS price
+                    FROM Item) AS prices
+                GROUP BY itemID) AS bi
+              WHERE item_info.itemID = bi.itemID -- link tables by itemID
+              ORDER BY endDate -- display by expire order (the soonest expire one shows first)
   ";
   $result = mysqli_query($connection, $query);
   /* For the purposes of pagination, it would also be helpful to know the
