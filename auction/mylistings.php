@@ -1,5 +1,6 @@
 <?php include_once("header.php")?>
 <?php require("utilities.php")?>
+<?php include_once('database.php')?>
 
 <div class="container">
 
@@ -21,13 +22,24 @@
 <ul class="list-group">
 
 <?php
+  // This page is for showing a user the auction listings they've made.
+  // It will be pretty similar to browse.php, except there is no search bar.
+  // This can be started after browse.php is working with a database.
+  // Feel free to extract out useful functions from browse.php and put them in
+  // the shared "utilities.php" where they can be shared by multiple files.
+
+    // TODO: Check user's credentials (cookie/session).
     if (!isset($_SESSION['account_type']) || $_SESSION['account_type'] != 'seller') {
     header('Location: browse.php');
     }
-    include_once('database.php');
-
     $seller_id = $_SESSION['userid'];
-    // Query: insert the auction item to the database
+
+    // TODO: Perform a query to pull up their auctions.
+    // Select items created by user
+    // as it is beneficial for a seller to see their auctions results with a integrated record list of created auctions
+    // we decide to display items in both active and expired auctions(expired auctions show after active auctions)
+    // for active auctions, the soonest expired one shows first
+    // for expired auctions, the latest expired one shows first
     $query = "SELECT i.itemID as itemID, itemName, description, latestPrice, endDate, bid_cnt
      FROM Item i
      JOIN (
@@ -46,20 +58,18 @@
      ) AS bi
      ON i.itemID = bi.itemID
      WHERE sellerID = '$seller_id'
-     ORDER BY endDate
+     ORDER BY SIGN(endDate-now()) DESC, ABS(endDate-now())
     ";
+
     $result = mysqli_query($connection, $query);
-    //$rowcount=mysqli_num_rows($result);
-    //printf("Result set has %d rows.\n",$rowcount);
-          /* For the purposes of pagination, it would also be helpful to know the
-     total number of results that satisfy the above query */
-    $num_results = mysqli_num_rows($result); // TODO: Calculate me for real
+    $num_results = mysqli_num_rows($result); 
     $results_per_page = 5;
     $max_page = ceil($num_results / $results_per_page);
     $page_start = ($curr_page-1) * $results_per_page;  
     $query .= " LIMIT " . $page_start . ',' . $results_per_page;
     $result = mysqli_query($connection, $query);
-
+    
+    // TODO: Loop through results and print them out as list items.
     while ($row = mysqli_fetch_assoc($result)) {
         $item_id = $row['itemID'];
         $title = $row['itemName'];
@@ -67,22 +77,8 @@
         $price = $row['latestPrice'];
         $num_bids = $row['bid_cnt'];
         $end_time = new DateTime($row['endDate']);
-        print_listing_li($item_id, $title, $desc, $price, $num_bids, $end_time);
+        print_listing_li($item_id, $title, $desc, $price, $num_bids, $end_time, '');
     }
-
-  // This page is for showing a user the auction listings they've made.
-  // It will be pretty similar to browse.php, except there is no search bar.
-  // This can be started after browse.php is working with a database.
-  // Feel free to extract out useful functions from browse.php and put them in
-  // the shared "utilities.php" where they can be shared by multiple files.
-  
-  
-  // TODO: Check user's credentials (cookie/session).
-  
-  // TODO: Perform a query to pull up their auctions.
-  
-  // TODO: Loop through results and print them out as list items.
-mysqli_close($connection);
 ?>
 
 </ul>
@@ -149,7 +145,6 @@ mysqli_close($connection);
 
   </ul>
 </nav>
-
 
 </div>
 
