@@ -10,12 +10,12 @@
   $has_session = $_SESSION['logged_in'];
 
   // TODO: Use item_id to make a query to the database.
-  $query="SELECT i.itemID as itemID, itemName, description, latestPrice, endDate, reservePrice, bid_cnt
+  // Select informations on a specific item
+  $query="SELECT i.itemID as itemID, itemName, description, latestPrice, endDate, reservePrice
   FROM Item i
   JOIN
     (SELECT itemID,
-             MAX(price) AS latestPrice,
-             COUNT(*)-1 AS bid_cnt
+             MAX(price) AS latestPrice
      FROM
        (SELECT itemID,
                bidPrice AS price
@@ -26,7 +26,8 @@
         FROM Item
         where itemID='$item_id') AS prices
      GROUP BY itemID ) bi
-  WHERE i.itemID = bi.itemID ";
+  WHERE i.itemID = bi.itemID 
+  ";
   $result=mysqli_query($connection, $query);
 
   // DELETEME: For now, using placeholder data.
@@ -42,7 +43,6 @@
     $description=$row['description'];
     $current_price=$row['latestPrice'];
     $reserve_price=$row['reservePrice'];
-    $num_bids=$row['bid_cnt']; //delete?
     $end_time=new DateTime($row['endDate']);
 
   } 
@@ -105,6 +105,16 @@
   </div>
 </div>
 
+<?php
+//find out which buyer bids with highest price
+$query = "SELECT buyerID FROM BidItem WHERE itemID='$item_id' and bidPrice = '$current_price'";
+$result = mysqli_query($connection, $query);
+while($row=mysqli_fetch_array($result))
+{
+  $buyerID_highestPrice = $row['buyerID']; 
+} 
+?>
+
 <div class="row"> <!-- Row #2 with auction description + bidding info -->
   <div class="col-sm-8"> <!-- Left col with item info -->
 
@@ -123,15 +133,6 @@
      Result: 
      
 <?php
-
-//find out which buyer bid with highest price
-$query = "SELECT buyerID FROM BidItem WHERE itemID='$item_id' and bidPrice = '$current_price'";
-$result = mysqli_query($connection, $query);
-while($row=mysqli_fetch_array($result))
-{
-  $buyerID_highestPrice = $row['buyerID']; 
-} 
-
 //check1 if current price higher than reserve price
 //check2 if this account is a buyer account
 //check2 if this buyer account is the buyer account with highest bid price
@@ -154,7 +155,16 @@ if($current_price >= $reserve_price){
 
 <?php else: ?>
      Auction ends <?php echo(date_format($end_time, 'j M H:i') . $time_remaining) ?></p >  
-    <p class="lead">Current bid: £<?php echo(number_format($current_price, 2)) ?></p >
+    <p class="lead">
+      Current bid: £<?php echo(number_format($current_price, 2)) ?>
+      <?php 
+      if($buyerID_highestPrice == $buyer_id){
+        echo('(Your bid)');
+      }else{
+        echo('(Other\'s bid)');
+      }
+    ?>
+    </p >
 
     <?php
     if (isset($_SESSION['account_type']) && $_SESSION['account_type'] == 'buyer') {
