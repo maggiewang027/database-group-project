@@ -29,7 +29,7 @@
                 $_SESSION['userid'] = $id;
                 $_SESSION['username'] = $name;
                 $_SESSION['account_type'] = $type;
-                echo '<div class="text-center">You are now logged in! You will be redirected shortly.</div>';
+                echo '<div class="text-center">You are now logged in as "'.$_SESSION['username'].'"! You will be redirected shortly.</div>';
                 // Redirect to index after 3 seconds
                 header("refresh:3;url=index.php");
             } else {
