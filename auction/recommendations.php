@@ -33,10 +33,14 @@
   $buyer_id = $_SESSION['userid'];
   
   // TODO: Perform a query to pull up auctions they might be interested in.
+
   // For a specific buyer, recommend the buyer things by 
   // finding other buyers who are similar to this buyer and recommend things that other buyers have bid on
-  // method for measuring the similarity is whether they have bid for the same items
+  // method for measuring the similarity is whether they have bid for a same item
 
+  // Select items for recommendation
+  // only display items in active auctions
+  // display by expired order (the soonest expired one shows first)
   $query = "SELECT  item_info.itemID AS itemID,
                     itemName,
                     description,
@@ -76,9 +80,7 @@
   ";
   
   $result = mysqli_query($connection, $query);
-  /* For the purposes of pagination, it would also be helpful to know the
-     total number of results that satisfy the above query */
-  $num_results = mysqli_num_rows($result); // TODO: Calculate me for real
+  $num_results = mysqli_num_rows($result); 
   $results_per_page = 5;
   $max_page = ceil($num_results / $results_per_page);
   $page_start = ($curr_page-1) * $results_per_page;  
@@ -93,11 +95,8 @@
     $current_price = $row['latestPrice'];
     $num_bids = $row['bid_cnt'];
     $end_date = new DateTime($row['endDate']);
-    print_listing_li($item_id, $title, $description, $current_price, $num_bids, $end_date);
+    print_listing_li($item_id, $title, $description, $current_price, $num_bids, $end_date, '');
   }
-
-
-  mysqli_close($connection);
 ?>
 
 </ul>
