@@ -37,6 +37,9 @@ if (!isset($_SESSION['account_type']) || $_SESSION['account_type'] != 'buyer') {
   }
 
   // TODO: Perform a query to pull up the auctions within watchlist.
+  // Select auctions buyer are watching
+  // only display items in active auctions
+  // display by expired order (the soonest expired one shows first)
 $buyerID = $_SESSION['userid'];
   if (isset($_SESSION['logged_in']) && $_SESSION['logged_in'] == true) {
     $query = "SELECT i.itemID as itemID, itemName, description, latestPrice, endDate, bid_cnt
@@ -55,7 +58,8 @@ $buyerID = $_SESSION['userid'];
      GROUP BY itemID
       ) bi
      WHERE i.itemID IN (SELECT itemID FROM Watchlist WHERE buyerID = '$buyerID') 
-        AND i.itemID = bi.itemID";
+        AND i.itemID = bi.itemID
+        AND endDate > now()";
     $result = mysqli_query($connection, $query)or die('Error making select users query' . mysql_error());
       /* For the purposes of pagination, it would also be helpful to know the
      total number of results that satisfy the above query */
@@ -78,7 +82,7 @@ $buyerID = $_SESSION['userid'];
         $currentprice = $row['latestPrice'];
         $num_bids = $row['bid_cnt'];
         $end_time = new DateTime($row['endDate']);
-        print_listing_li($item_id, $title, $desc, $currentprice, $num_bids, $end_time);
+        print_listing_li($item_id, $title, $desc, $currentprice, $num_bids, $end_time, '');
       }
     }
   } else {
