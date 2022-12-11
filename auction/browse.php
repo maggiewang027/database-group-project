@@ -106,8 +106,12 @@
      retrieve data from the database. (If there is no form data entered,
      decide on appropriate default value/default query to make. */
 
-     //obtain search result   
-     //memo: default value & keep expire record?
+     // obtain search result with choosed order
+     // besides reqired order queries
+     // as it is beneficial for a user to access all auction results as references
+     // we decide to display items in both active and expired auctions(expired auctions show after active auctions)
+     // for active auctions, the soonest expired one shows first
+     // for expired auctions, the latest expired one shows first
 if($ordering == 'pricelow'){
   if($category=='all'){
     $query = "SELECT i.itemID as itemID, itemName, description, latestPrice, endDate, bid_cnt
@@ -128,7 +132,7 @@ if($ordering == 'pricelow'){
      ) AS bi
      WHERE i.itemID = bi.itemID
      AND concat(itemName,description) LIKE '%$keyword%' 
-     ORDER BY latestPrice
+     ORDER BY SIGN(endDate-now()) DESC, latestPrice
     ";
     }
     else {$query = "SELECT i.itemID as itemID, itemName, description, latestPrice, endDate, bid_cnt
@@ -150,7 +154,7 @@ if($ordering == 'pricelow'){
      WHERE i.itemID = bi.itemID
      AND concat(itemName,description) LIKE '%$keyword%'
      AND category = '$category'
-     ORDER BY latestPrice
+     ORDER BY SIGN(endDate-now()) DESC, latestPrice
     ";
     }
 } elseif($ordering == 'pricehigh'){
@@ -173,7 +177,7 @@ if($ordering == 'pricelow'){
      ) AS bi
     WHERE i.itemID = bi.itemID
     AND concat(itemName,description) LIKE '%$keyword%'
-    ORDER BY latestPrice DESC
+    ORDER BY SIGN(endDate-now()) DESC, latestPrice DESC
     ";
     }
     else {$query = "SELECT i.itemID as itemID, itemName, description, latestPrice, endDate, bid_cnt
@@ -195,7 +199,7 @@ if($ordering == 'pricelow'){
      WHERE i.itemID = bi.itemID
      AND concat(itemName,description) LIKE '%$keyword%'
      AND category = '$category' 
-       ORDER BY latestPrice DESC
+     ORDER BY SIGN(endDate-now()) DESC, latestPrice DESC
     ";
     }
 } elseif($ordering == 'date'){
@@ -218,7 +222,7 @@ if($ordering == 'pricelow'){
      ) AS bi
     WHERE i.itemID = bi.itemID
     AND concat(itemName,description) LIKE '%$keyword%'
-    ORDER BY endDate
+    ORDER BY SIGN(endDate-now()) DESC, ABS(endDate-now())
     ";
     }
     else {$query = "SELECT i.itemID as itemID, itemName, description, latestPrice, endDate, bid_cnt
@@ -240,7 +244,7 @@ if($ordering == 'pricelow'){
      WHERE i.itemID = bi.itemID
      AND concat(itemName,description) LIKE '%$keyword%'
      AND category = '$category'
-     ORDER BY endDate
+     ORDER BY SIGN(endDate-now()) DESC, ABS(endDate-now())
     ";
     }
 }
@@ -264,7 +268,7 @@ $result = mysqli_query($connection, $query);
 
 <?php
 if($num_results == 0){
-  //echo '<div class="text-center">Sorry, there is no matching result. </div>';
+  echo '<div class="text-center">Sorry, there is no matching result. </div>';
 }
 ?>
 
@@ -281,7 +285,7 @@ if($num_results == 0){
       $current_price = $row['latestPrice'];
       $num_bids = $row['bid_cnt'];
       $end_date = New DateTime($row['endDate']);
-      print_listing_li($item_id, $title, $description, $current_price, $num_bids, $end_date);
+      print_listing_li($item_id, $title, $description, $current_price, $num_bids, $end_date, '');
     }
 ?>
 
