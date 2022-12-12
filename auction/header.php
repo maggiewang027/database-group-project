@@ -3,6 +3,7 @@
   // But eventually, with a database, these should be set automatically
   // ONLY after the user's login credentials have been verified via a 
   // database query.
+  include 'database.php';
   session_start();
 ?>
 

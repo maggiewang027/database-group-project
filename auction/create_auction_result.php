@@ -4,7 +4,7 @@
 
 <?php
     // Connect to the database
-    include_once('database.php');
+    include('database.php');
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 

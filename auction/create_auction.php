@@ -7,7 +7,7 @@
   if (!isset($_SESSION['account_type']) || $_SESSION['account_type'] != 'seller') {
     header('Location: browse.php');
   }
-  include_once('database.php');
+  include('database.php');
 ?>
 
 <div class="container">
