@@ -22,7 +22,7 @@
             }
             $end_date = $_POST["auctionEndDate"];
             $seller_id = $_SESSION['userid'];
-            if ($end_date<=new DateTime()) {
+            if (new Datetime($end_date)<=new DateTime()) {
                 echo '<div class="text-center">Please make sure the end time is not now. You will be redirected shortly.</div>';
                 // Redirect to index after 3 seconds
                 header("refresh:3;url=create_auction.php");
