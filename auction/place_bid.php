@@ -1,4 +1,5 @@
 <?php include_once("header.php")?>
+<div class="container my-5">
 <?php include("database.php")?>
 <?php require("utilities.php")?>
 <?php
