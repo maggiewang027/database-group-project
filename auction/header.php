@@ -4,6 +4,7 @@
   // ONLY after the user's login credentials have been verified via a 
   // database query.
   include 'database.php';
+  require_once 'send_email.php';
   session_start();
 ?>
 
