@@ -6,6 +6,8 @@
 #1210 Delete: Delete status in BidItem & Item table
 # TODO: Align ID format
 
+set global sql_mode='';
+
 #DROP DATABASE auction;
 
 CREATE DATABASE auction
