@@ -5,6 +5,7 @@
   require 'vendor/autoload.php';
   include "database.php";
 
+  // Query 1: check if the bid item expired and obtain the information we need
   $query1 = "SELECT i.itemID as itemID, maxPrice, itemName, sellerID, bid_cnt
              FROM Item i
              JOIN (
@@ -24,42 +25,35 @@
              WHERE endDate<=now() AND now()-interval 5 second<=endDate AND bi.ItemId = i.ItemId
              ";
   $result1 = mysqli_query($connection, $query1);
-  //$rowcount1 = mysqli_num_rows($result1);
-  //printf("Result set has %d rows.\n",$rowcount1);
 
   if (mysqli_num_rows($result1) >= 1) {
     while ($row1 = mysqli_fetch_assoc($result1)) {
+      // Set the variables
       $item_id = $row1['itemID'];
       $max_price = $row1['maxPrice'];
       $item_name = $row1['itemName'];
       $seller_id = $row1['sellerID'];
       $bid_cnt = $row1['bid_cnt'];
-      //printf("Id: %d.\n",$item_id);
-      //printf("Price: %d.\n",$max_price);
-      //printf("Name: %s.\n",$item_name);
-      //printf("Seller: %d.\n",$seller_id);
     }
 
+    // Check if the bid number equals to 0, if so, then only notify the seller
     if ($bid_cnt > 0) {
+
+      // Query 2: obtain the buyer id who bids with the highest price
       $query2 = "SELECT buyerID FROM BidItem WHERE itemID = '$item_id' AND bidPrice = '$max_price'";
       $result2 = mysqli_query($connection, $query2);
-      //$rowcount2 = mysqli_num_rows($result2);
-      //printf("Result set has %d rows.\n",$rowcount2);
-
       while ($row2 = mysqli_fetch_assoc($result2)) {
+        // Set the variable
         $winner_id = $row2['buyerID'];
-        //printf("Buyer id: %d.\n",$winner_id);
       }
 
+      // Query 3: obtain the buyer's information
       $query3 = "SELECT displayName, email FROM User WHERE userID = '$winner_id'";
       $result3 = mysqli_query($connection, $query3);
-      //$rowcount3 = mysqli_num_rows($result3);
-      //printf("Result set has %d rows.\n",$rowcount3);
       while ($row3 = mysqli_fetch_assoc($result3)) {
+        // Set the variables
         $winner_name = $row3['displayName'];
         $winner_email = $row3['email'];
-        //printf("Name: %s.\n",$winner_name);
-        //printf("Email: %s.\n",$winner_email);
         try {
           $mail = new PHPMailer();
           $mail->isSMTP();
@@ -92,9 +86,11 @@
         }
       }
 
+      // Query 4: obtain the seller's information
       $query4 = "SELECT displayName, email FROM User WHERE userID = '$seller_id'";
       $result4 = mysqli_query($connection, $query4);
       while ($row4 = mysqli_fetch_assoc($result4)) {
+        // Set the variables
         $seller_name = $row4['displayName'];
         $seller_email = $row4['email'];
         try {
@@ -129,9 +125,12 @@
         }
       }
     } else {
+
+      // Query 5: Send an email to seller if there is no bidder
       $query5 = "SELECT displayName, email FROM User WHERE userID = '$seller_id'";
       $result5 = mysqli_query($connection, $query5);
       while ($row5 = mysqli_fetch_assoc($result5)) {
+        // Set the variables
         $seller_name = $row5['displayName'];
         $seller_email = $row5['email'];
         try {
