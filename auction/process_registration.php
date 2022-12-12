@@ -1,3 +1,8 @@
+<?php include_once("header.php")?>
+
+<div class="container my-5">
+
+
 <?php
     // Connect to the database
     include_once("header.php");
