@@ -51,7 +51,7 @@ if (isset($_SESSION['account_type']) && $_SESSION['account_type'] == 'buyer') {
 
         if($result)
         {
-        echo '<div class="text-center">Bid successful</div>';
+        echo '<div class="text-center">Bid successful! <a href="mybids.php">View your bid listing.</a></div>';
 
         // Query 1: obtain the item id
         $query1 = "SELECT itemName FROM Item WHERE itemID = '$item_id'";
@@ -177,7 +177,7 @@ if (isset($_SESSION['account_type']) && $_SESSION['account_type'] == 'buyer') {
             }
         }
 
-        header("refresh:2;url=browse.php");
+        //header("refresh:2;url=browse.php");
         }
         else
         {
@@ -189,7 +189,7 @@ if (isset($_SESSION['account_type']) && $_SESSION['account_type'] == 'buyer') {
     }
     else
     {
-        echo '<div class="text-center">You cannot enter a value lower than Current bid</div>';
+        echo '<div class="text-center">You cannot enter a value lower than Current bid. You will be redirected shortly.</div>';
         header("refresh:3;url=listing.php?item_id=$item_id");
     }
 
