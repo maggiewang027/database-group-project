@@ -22,11 +22,17 @@
             }
             $end_date = $_POST["auctionEndDate"];
             $seller_id = $_SESSION['userid'];
-            // Query: insert the auction item to the database
-            $create_auction = "INSERT INTO Item (itemID, itemName, description, category, startingPrice, reservePrice, endDate, sellerID) VALUES (NULL, '$title', '$details', '$category', '$start_price', '$reserve_price', '$end_date', '$seller_id')";
-            $result = mysqli_query($connection, $create_auction);
-            // If all is successful, let user know.
-            echo('<div class="text-center">Auction successfully created! <a href="mylistings.php">View your new listing.</a></div>');
+            if ($end_date<=new DateTime()) {
+                echo '<div class="text-center">Please make sure the end time is not now. You will be redirected shortly.</div>';
+                // Redirect to index after 3 seconds
+                header("refresh:3;url=create_auction.php");
+            } else {
+                // Query: insert the auction item to the database
+                $create_auction = "INSERT INTO Item (itemID, itemName, description, category, startingPrice, reservePrice, endDate, sellerID) VALUES (NULL, '$title', '$details', '$category', '$start_price', '$reserve_price', '$end_date', '$seller_id')";
+                $result = mysqli_query($connection, $create_auction);
+                // If all is successful, let user know.
+                echo('<div class="text-center">Auction successfully created! <a href="mylistings.php">View your new listing.</a></div>');
+            }
         } else {
             echo '<div class="text-center">Please enter all the required information. You will be redirected shortly.</div>';
             // Redirect to index after 3 seconds
