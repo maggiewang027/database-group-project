@@ -20,6 +20,7 @@ $buyer_id = $_SESSION['userid'];
 //
 if (isset($_SESSION['account_type']) && $_SESSION['account_type'] == 'buyer') {
     $bid = $_POST['bid'];
+    // Query 1: obtain the highest price of the bid item
     $query="SELECT latestPrice
       FROM Item i
       JOIN
@@ -40,11 +41,13 @@ if (isset($_SESSION['account_type']) && $_SESSION['account_type'] == 'buyer') {
     $result=mysqli_query($connection, $query);
     while($row=mysqli_fetch_array($result))
     {
+        // Set the variable
         $latest_price=$row['latestPrice'];
     }
 
     if ($bid > $latest_price)
     {
+        // Query 2: insert the variables to the database
         $query = "INSERT INTO BidItem (bidID, itemID, bidTime, bidPrice, buyerID) 
         VALUES (NULL, '$item_id', now(), '$bid', '$buyer_id')";          
         $result = mysqli_query($connection, $query);
@@ -53,15 +56,16 @@ if (isset($_SESSION['account_type']) && $_SESSION['account_type'] == 'buyer') {
         {
         echo '<div class="text-center">Bid successful! <a href="mybids.php">View your bid listing.</a></div>';
 
-        // Query 1: obtain the item id
+        // Query 3: obtain the item id
         $query1 = "SELECT itemName FROM Item WHERE itemID = '$item_id'";
         $result1 = mysqli_query($connection, $query1);
         while($row1=mysqli_fetch_assoc($result1))
-        {
+        {   
+            // Set the variable
             $item_name=$row1['itemName'];
         }
         
-        // Query 2: obtain the buyer's information with the highest price
+        // Query 4: obtain the buyer's information with the highest price
         $query2 = "SELECT nowBuyerName, nowBuyerEmail, MAX(bidPrice) AS maxPrice
                    FROM BidItem bi
                    JOIN
@@ -83,6 +87,7 @@ if (isset($_SESSION['account_type']) && $_SESSION['account_type'] == 'buyer') {
         // Send an email to the buyer
         while($row2=mysqli_fetch_assoc($result2))
         {
+            // Set the variables
             $nowbuyer_name=$row2['nowBuyerName'];
             $nowbuyer_email=$row2['nowBuyerEmail'];
             $highest_bid=$row2['maxPrice'];
@@ -119,7 +124,7 @@ if (isset($_SESSION['account_type']) && $_SESSION['account_type'] == 'buyer') {
             }
         }
 
-        // Query 3: obtain the buyers' information with the previous price
+        // Query 5: obtain the buyers' information with the previous price
         $query3 = "SELECT prevBuyerName, prevBuyerEmail, MAX(bidPrice) AS prevPrice
                    FROM BidItem bi
                    JOIN
@@ -141,6 +146,7 @@ if (isset($_SESSION['account_type']) && $_SESSION['account_type'] == 'buyer') {
         // Send an email to the buyers
         while($row3=mysqli_fetch_assoc($result3))
         {
+            // Set the variables
             $prevbuyer_name=$row3['prevBuyerName'];
             $prevbuyer_email=$row3['prevBuyerEmail'];
             $prev_bid=$row3['prevPrice'];
