@@ -1,7 +1,7 @@
 <?php
     // Connect to the database
     include_once("header.php");
-    include_once('database.php');
+    include('database.php');
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Obtain the login information
@@ -65,3 +65,4 @@
 //header("refresh:5;url=index.php");
 
 ?>
+<?php include_once('footer.php')?>

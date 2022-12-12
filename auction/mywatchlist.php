@@ -1,6 +1,6 @@
 <?php include_once("header.php")?>
 <?php require("utilities.php")?>
-<?php include_once("database.php")?>
+<?php include("database.php")?>
 
 <div class="container">
 

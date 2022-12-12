@@ -1,5 +1,5 @@
 <?php include_once("database.php")?>
-<?php include_once("header.php")?>
+<?php include("header.php")?>
 <?php require("utilities.php")?>
 
 <div class="container">
@@ -165,3 +165,5 @@ mysqli_close($connection);
 </nav>
 
 </div>
+
+<?php include_once('footer.php')?>

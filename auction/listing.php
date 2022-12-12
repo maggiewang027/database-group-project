@@ -1,5 +1,5 @@
 <?php include_once("header.php")?>
-<?php include_once("database.php")?>
+<?php include("database.php")?>
 <?php require("utilities.php")?>
 
 <?php

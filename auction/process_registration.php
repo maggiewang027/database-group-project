@@ -1,7 +1,7 @@
 <?php
     // Connect to the database
     include_once("header.php");
-    include_once('database.php');
+    include('database.php');
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -69,3 +69,5 @@
 // options.
 
 ?>
+
+<?php include_once('footer.php')?>
