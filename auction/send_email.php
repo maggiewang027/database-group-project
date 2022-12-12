@@ -56,6 +56,7 @@
         $winner_email = $row3['email'];
         try {
           $mail = new PHPMailer();
+          $mail->CharSet = "UTF-8";
           $mail->isSMTP();
           $mail->Host = 'smtp.mailtrap.io';
           $mail->SMTPAuth = true;
@@ -95,6 +96,7 @@
         $seller_email = $row4['email'];
         try {
           $mail = new PHPMailer();
+          $mail->CharSet = "UTF-8";
           $mail->isSMTP();
           $mail->Host = 'smtp.mailtrap.io';
           $mail->SMTPAuth = true;
@@ -135,6 +137,7 @@
         $seller_email = $row5['email'];
         try {
           $mail = new PHPMailer();
+          $mail->CharSet = "UTF-8";
           $mail->isSMTP();
           $mail->Host = 'smtp.mailtrap.io';
           $mail->SMTPAuth = true;
