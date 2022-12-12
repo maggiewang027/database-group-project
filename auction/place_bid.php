@@ -94,6 +94,7 @@ if (isset($_SESSION['account_type']) && $_SESSION['account_type'] == 'buyer') {
 
             try {
               $mail = new PHPMailer();
+              $mail->CharSet = "UTF-8";
               $mail->isSMTP();
               $mail->Host = 'smtp.mailtrap.io';
               $mail->SMTPAuth = true;
@@ -153,6 +154,7 @@ if (isset($_SESSION['account_type']) && $_SESSION['account_type'] == 'buyer') {
 
             try {
               $mail = new PHPMailer();
+              $mail->CharSet = "UTF-8";
               $mail->isSMTP();
               $mail->Host = 'smtp.mailtrap.io';
               $mail->SMTPAuth = true;
@@ -167,7 +169,7 @@ if (isset($_SESSION['account_type']) && $_SESSION['account_type'] == 'buyer') {
               // Set the subject
               $mail->Subject = 'Outbid Notification';
               // Set the mail message body
-              $mail->Body = "Dear ".$prevbuyer_name.",\n\nYour previous bid of the item '".$item_name."' has been auctioned by others for £".$highest_bid." and your previous bid price is £".$prev_bid.".\nIf you want to place a higher price, please log back to the system.\n\nBest Wishes,\nGroup 6 Auction Team";
+              $mail->Body = "Dear ".$prevbuyer_name.",\n\nYour previous bid of the item '".$item_name."' has been auctioned by others for £".$highest_bid." and your previous bid price is £".$prev_bid.".\nIf you want to place a higher price, please remember to log back to bid again.\n\nBest Wishes,\nGroup 6 Auction Team";
               // Finally send the mail
               $mail->send();
             }
