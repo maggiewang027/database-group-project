@@ -6,7 +6,7 @@
   include "database.php";
 
   // Query 1: check if the bid item expired and obtain the information we need
-  $query1 = "SELECT i.itemID as itemID, maxPrice, itemName, sellerID, bid_cnt
+  $query1 = "SELECT i.itemID as itemID, maxPrice, itemName, sellerID, bid_cnt, reservePrice
              FROM Item i
              JOIN (
              SELECT itemID,
@@ -34,6 +34,7 @@
       $item_name = $row1['itemName'];
       $seller_id = $row1['sellerID'];
       $bid_cnt = $row1['bid_cnt'];
+      $reserve_price = $row1['reservePrice'];
     }
 
     // Check if the bid number equals to 0, if so, then only notify the seller
@@ -55,25 +56,49 @@
         $winner_name = $row3['displayName'];
         $winner_email = $row3['email'];
         try {
-          $mail = new PHPMailer();
-          $mail->CharSet = "UTF-8";
-          $mail->isSMTP();
-          $mail->Host = 'smtp.mailtrap.io';
-          $mail->SMTPAuth = true;
-          $mail->Port = 2525;
-          $mail->Username = '55fa1691ecde2c';
-          $mail->Password = 'dc1930f984410a';
 
-          // Set the mail sender
-          $mail->setFrom('group6auction@mailtrap.io', 'Group6Auction');
-          // Add a recipient
-          $mail->addAddress($winner_email, $winner_name);
-          // Set the subject
-          $mail->Subject = 'Congrats for Your Auction!';
-          // Set the mail message body
-          $mail->Body = "Dear ".$winner_name.",\n\nCongratulations! You are the winner of the item '".$item_name."' for £".$max_price."!\n\nBest Wishes,\nGroup 6 Auction Team";
-          // Finally send the mail
-          $mail->send();
+          // Check if the reserve price is lower than the max price
+          if ($reserve_price<=$max_price) {
+            $mail = new PHPMailer();
+            $mail->CharSet = "UTF-8";
+            $mail->isSMTP();
+            $mail->Host = 'smtp.mailtrap.io';
+            $mail->SMTPAuth = true;
+            $mail->Port = 2525;
+            $mail->Username = '55fa1691ecde2c';
+            $mail->Password = 'dc1930f984410a';
+
+            // Set the mail sender
+            $mail->setFrom('group6auction@mailtrap.io', 'Group6Auction');
+            // Add a recipient
+            $mail->addAddress($winner_email, $winner_name);
+            // Set the subject
+            $mail->Subject = 'Congrats for Your Auction!';
+            // Set the mail message body
+            $mail->Body = "Dear ".$winner_name.",\n\nCongratulations! You are the winner of the item '".$item_name."' for £".$max_price."!\n\nBest Wishes,\nGroup 6 Auction Team";
+            // Finally send the mail
+            $mail->send();
+          } else {
+            $mail = new PHPMailer();
+            $mail->CharSet = "UTF-8";
+            $mail->isSMTP();
+            $mail->Host = 'smtp.mailtrap.io';
+            $mail->SMTPAuth = true;
+            $mail->Port = 2525;
+            $mail->Username = '55fa1691ecde2c';
+            $mail->Password = 'dc1930f984410a';
+
+            // Set the mail sender
+            $mail->setFrom('group6auction@mailtrap.io', 'Group6Auction');
+            // Add a recipient
+            $mail->addAddress($winner_email, $winner_name);
+            // Set the subject
+            $mail->Subject = 'Auction Failed Notification';
+            // Set the mail message body
+            $mail->Body = "Dear ".$winner_name.",\n\nYour bid price of the item '".$item_name."' is £".$max_price." which is lower than the reserve price of £".$reserve_price.". So unfortunately your auction is unsuccessful.\n\nBest Wishes,\nGroup 6 Auction Team";
+            // Finally send the mail
+            $mail->send();
+          }
         }
         catch (Exception $e)
         {
@@ -95,25 +120,49 @@
         $seller_name = $row4['displayName'];
         $seller_email = $row4['email'];
         try {
-          $mail = new PHPMailer();
-          $mail->CharSet = "UTF-8";
-          $mail->isSMTP();
-          $mail->Host = 'smtp.mailtrap.io';
-          $mail->SMTPAuth = true;
-          $mail->Port = 2525;
-          $mail->Username = '55fa1691ecde2c';
-          $mail->Password = 'dc1930f984410a';
 
-          // Set the mail sender
-          $mail->setFrom('group6auction@mailtrap.io', 'Group6Auction');
-          // Add a recipient
-          $mail->addAddress($seller_email, $seller_name);
-          // Set the subject
-          $mail->Subject = 'Congrats for Your Item!';
-          // Set the mail message body
-          $mail->Body = "Dear ".$seller_name.",\n\nCongratulations! Your item '".$item_name."' has been auctioned by ".$winner_name." for £".$max_price."!\n\nBest Wishes,\nGroup 6 Auction Team";
-          // Finally send the mail
-          $mail->send();
+          // Check if the reserve price is lower than the max price
+          if ($reserve_price<=$max_price) {
+            $mail = new PHPMailer();
+            $mail->CharSet = "UTF-8";
+            $mail->isSMTP();
+            $mail->Host = 'smtp.mailtrap.io';
+            $mail->SMTPAuth = true;
+            $mail->Port = 2525;
+            $mail->Username = '55fa1691ecde2c';
+            $mail->Password = 'dc1930f984410a';
+
+            // Set the mail sender
+            $mail->setFrom('group6auction@mailtrap.io', 'Group6Auction');
+            // Add a recipient
+            $mail->addAddress($seller_email, $seller_name);
+            // Set the subject
+            $mail->Subject = 'Congrats for Your Item!';
+            // Set the mail message body
+            $mail->Body = "Dear ".$seller_name.",\n\nCongratulations! Your item '".$item_name."' has been auctioned by ".$winner_name." for £".$max_price."!\n\nBest Wishes,\nGroup 6 Auction Team";
+            // Finally send the mail
+            $mail->send();
+          } else {
+            $mail = new PHPMailer();
+            $mail->CharSet = "UTF-8";
+            $mail->isSMTP();
+            $mail->Host = 'smtp.mailtrap.io';
+            $mail->SMTPAuth = true;
+            $mail->Port = 2525;
+            $mail->Username = '55fa1691ecde2c';
+            $mail->Password = 'dc1930f984410a';
+
+            // Set the mail sender
+            $mail->setFrom('group6auction@mailtrap.io', 'Group6Auction');
+            // Add a recipient
+            $mail->addAddress($seller_email, $seller_name);
+            // Set the subject
+            $mail->Subject = 'Auction Failed Notification';
+            // Set the mail message body
+            $mail->Body = "Dear ".$seller_name.",\n\nYour item '".$item_name."' has the highest bid price of £".$max_price." which is lower than the reserve price of £".$reserve_price.". So unfortunately your auction is unsuccessful and has been closed now.\n\nBest Wishes,\nGroup 6 Auction Team";
+            // Finally send the mail
+            $mail->send();
+          }
         }
         catch (Exception $e)
         {
@@ -152,7 +201,7 @@
           // Set the subject
           $mail->Subject = 'No Bid Notification';
           // Set the mail message body
-          $mail->Body = "Dear ".$seller_name.",\n\nYour item '".$item_name."' has no bider and the auction has been closed now.\n\nBest Wishes,\nGroup 6 Auction Team";
+          $mail->Body = "Dear ".$seller_name.",\n\nYour item '".$item_name."' has no bidder and the auction has been closed now.\n\nBest Wishes,\nGroup 6 Auction Team";
           // Finally send the mail
           $mail->send();
         }
