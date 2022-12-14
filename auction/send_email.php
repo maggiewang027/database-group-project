@@ -22,7 +22,7 @@
                ) AS prices
              GROUP BY itemID
              ) AS bi
-             WHERE endDate<=now() AND now()-interval 5 second<=endDate AND bi.ItemId = i.ItemId
+             WHERE endDate=now() AND bi.ItemId = i.ItemId
              ";
   $result1 = mysqli_query($connection, $query1);
 
